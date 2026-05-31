@@ -1,0 +1,36 @@
+---
+import { getCollection } from 'astro:content';
+import type { Locale } from '@/i18n/config';
+import { getSlug } from '@/lib/articles';
+import ArticleLayout from '@/layouts/ArticleLayout.astro';
+
+export async function getStaticPaths() {
+  const all = await getCollection('articles');
+  return all
+    .filter((entry) => entry.data.draft !== true)
+    .map((entry) => ({
+      params: { lang: entry.data.locale, slug: getSlug(entry) },
+      props: { entry },
+    }));
+}
+
+const { entry } = Astro.props;
+const lang = entry.data.locale as Locale;
+const { Content, headings } = await entry.render();
+
+const description = entry.data.description ?? entry.data.dek;
+---
+
+<ArticleLayout
+  title={entry.data.title}
+  dek={entry.data.dek}
+  description={description}
+  pubDate={entry.data.pubDate}
+  locale={lang}
+  ogImage={entry.data.ogImage}
+  layoutVariant={entry.data.layoutVariant}
+  showToc={entry.data.showToc}
+  headings={headings}
+>
+  <Content />
+</ArticleLayout>
