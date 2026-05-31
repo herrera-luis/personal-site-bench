@@ -1,0 +1,39 @@
+---
+title: Hello, bilingual world
+dek: A sample article that exercises the full template — shared components and a wider reading column.
+pubDate: 2026-05-20
+wide: true
+hideDek: false
+draft: false
+---
+
+import Callout from '../../../../components/Callout.astro';
+import Figure from '../../../../components/Figure.astro';
+import cover from '../cover.svg';
+
+This article exists to prove the template works end to end. It is written in MDX,
+so it can import shared components and compose a custom structure — while still
+rendering as plain, JavaScript-free HTML.
+
+<Figure src={cover.src} alt="An abstract gradient cover" caption="A colocated cover asset, imported relatively from the article folder." />
+
+## Importing components
+
+The `wide` frontmatter flag widened the reading column for this page, and the
+figure above is an imported, colocated asset. Components let an article vary its
+layout without touching any global code.
+
+<Callout type="note" title="Frontmatter controls">
+  Set <code>wide</code>, <code>hideDek</code>, or <code>draft</code> in the
+  frontmatter to change how an article is presented and listed.
+</Callout>
+
+## Why folder-per-article?
+
+Each article is one folder with a file per locale. Adding a new article is just
+creating a folder — no code changes, no central registry to update.
+
+> Content first. The shell stays out of the way.
+
+That is the whole idea: restrained design, readable typography, and content that
+works everywhere.

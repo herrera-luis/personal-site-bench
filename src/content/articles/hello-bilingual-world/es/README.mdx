@@ -1,0 +1,40 @@
+---
+title: Hola, mundo bilingüe
+dek: "Un artículo de ejemplo que ejercita toda la plantilla: componentes compartidos y una columna de lectura más ancha."
+pubDate: 2026-05-20
+wide: true
+hideDek: false
+draft: false
+---
+
+import Callout from '../../../../components/Callout.astro';
+import Figure from '../../../../components/Figure.astro';
+import cover from '../cover.svg';
+
+Este artículo existe para demostrar que la plantilla funciona de principio a fin.
+Está escrito en MDX, así que puede importar componentes compartidos y componer una
+estructura personalizada, sin dejar de renderizarse como HTML simple y sin JavaScript.
+
+<Figure src={cover.src} alt="Una portada abstracta con degradado" caption="Un recurso de portada colocado junto al artículo e importado de forma relativa." />
+
+## Importar componentes
+
+La opción `wide` del frontmatter ensanchó la columna de lectura de esta página, y
+la figura de arriba es un recurso importado y colocado junto al contenido. Los
+componentes permiten que un artículo varíe su diseño sin tocar código global.
+
+<Callout type="note" title="Controles del frontmatter">
+  Define <code>wide</code>, <code>hideDek</code> o <code>draft</code> en el
+  frontmatter para cambiar cómo se presenta y se lista un artículo.
+</Callout>
+
+## ¿Por qué una carpeta por artículo?
+
+Cada artículo es una carpeta con un archivo por idioma. Añadir un artículo nuevo
+es simplemente crear una carpeta: sin cambios de código ni un registro central
+que actualizar.
+
+> El contenido primero. La interfaz se mantiene al margen.
+
+Esa es toda la idea: diseño contenido, tipografía legible y contenido que funciona
+en todas partes.
