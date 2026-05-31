@@ -8,7 +8,7 @@ import vercel from '@astrojs/vercel/static';
 export default defineConfig({
   site: 'https://personal-site.example',
   output: 'static',
-  adapter: vercel(),
+  adapter: vercel({}),
   trailingSlash: 'always',
   i18n: {
     defaultLocale: 'en',
