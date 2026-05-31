@@ -1,0 +1,24 @@
+---
+import { defaultLocale } from '@/i18n/config';
+
+// Root redirect to the default locale. Implemented as a static HTML page with a
+// meta-refresh + canonical so it works with no client JavaScript and on any
+// static host (defense-in-depth alongside any platform-level redirect rule).
+const target = `/${defaultLocale}/`;
+const site = Astro.site ?? new URL('https://personal-site.example');
+const canonical = new URL(target, site).href;
+---
+
+<!doctype html>
+<html lang={defaultLocale}>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="refresh" content={`0;url=${target}`} />
+    <link rel="canonical" href={canonical} />
+    <meta name="robots" content="noindex" />
+    <title>Personal Site</title>
+  </head>
+  <body>
+    <p>Redirecting to <a href={target}>Personal Site</a>&hellip;</p>
+  </body>
+</html>
