@@ -1,0 +1,42 @@
+---
+title: "Hola, mundo"
+dek: "Un primer artículo que ejercita la plantilla completa, con componentes incluidos."
+date: 2026-05-31
+description: "La publicación inaugural en Personal Site, que demuestra MDX con componentes compartidos y recursos colocados."
+wide: false
+hideDek: false
+---
+
+import Callout from '../../../../components/Callout.astro';
+import cover from '../cover.svg';
+
+![Imagen de portada para el artículo Hola, mundo](../cover.svg)
+
+Bienvenida a **Personal Site**. Este primer artículo existe para demostrar que la
+plantilla de artículos funciona de principio a fin: una vista de lectura extensa
+con un título H1, un subtítulo H3, una línea de metadatos y el cuerpo del texto,
+todo escrito en MDX.
+
+## Importar componentes compartidos
+
+Como los artículos son MDX, pueden importar y renderizar componentes compartidos
+para variar su estructura. Aquí tienes un `Callout`:
+
+<Callout title="¿Por qué MDX?">
+  MDX permite que un solo artículo adopte un diseño más rico sin cambiar el
+  código de ninguna página. Inserta un componente y se renderiza junto al texto.
+</Callout>
+
+## Recursos colocados
+
+La imagen de portada de arriba vive justo al lado de este archivo, dentro de la
+propia carpeta del artículo. Añadir un nuevo artículo es tan sencillo como crear
+una carpeta con sus archivos `README.mdx` por idioma y los recursos que necesite.
+
+## Mejora progresiva
+
+Esta página es completamente estática. Se lee perfectamente con JavaScript
+desactivado: no se requiere hidratación del lado del cliente para ver el
+contenido.
+
+Gracias por leer.
