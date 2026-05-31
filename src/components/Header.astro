@@ -1,0 +1,86 @@
+---
+import { type Locale, t, localizedPath } from "../i18n/utils";
+import LanguageSwitcher from "./LanguageSwitcher.astro";
+
+export interface Props {
+  locale: Locale;
+  hrefByLocale?: Partial<Record<Locale, string>>;
+}
+
+const { locale, hrefByLocale } = Astro.props;
+
+const current = Astro.url.pathname;
+
+const links = [
+  { href: localizedPath(locale), label: t(locale, "nav.home") },
+  { href: localizedPath(locale, "blog"), label: t(locale, "nav.blog") },
+  { href: localizedPath(locale, "about"), label: t(locale, "nav.about") },
+];
+
+// A nav item is active when the current path equals it, or (for non-home
+// items) starts with it — so /en/blog/x/ keeps "Blog" active.
+function isActive(href: string): boolean {
+  const home = localizedPath(locale);
+  if (href === home) return current === home;
+  return current === href || current.startsWith(href);
+}
+---
+
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href={localizedPath(locale)}>{t(locale, "site.title")}</a>
+    <nav class="primary-nav" aria-label={t(locale, "nav.blog")}>
+      {
+        links.map((link) => (
+          <a
+            href={link.href}
+            class:list={["nav-link", { active: isActive(link.href) }]}
+            aria-current={isActive(link.href) ? "page" : undefined}
+          >
+            {link.label}
+          </a>
+        ))
+      }
+    </nav>
+    <LanguageSwitcher locale={locale} hrefByLocale={hrefByLocale} />
+  </div>
+</header>
+
+<style>
+  .site-header {
+    border-bottom: 1px solid var(--color-border);
+    background: var(--color-surface);
+  }
+  .header-inner {
+    max-width: var(--content-width);
+    margin: 0 auto;
+    padding: 0.85rem 1.25rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem;
+  }
+  .brand {
+    font-weight: 700;
+    font-size: 1.1rem;
+    text-decoration: none;
+    color: var(--color-text);
+    margin-right: auto;
+  }
+  .primary-nav {
+    display: flex;
+    gap: 1rem;
+  }
+  .nav-link {
+    text-decoration: none;
+    color: var(--color-muted);
+    font-weight: 500;
+  }
+  .nav-link:hover {
+    color: var(--color-text);
+  }
+  .nav-link.active {
+    color: var(--color-accent);
+    font-weight: 700;
+  }
+</style>

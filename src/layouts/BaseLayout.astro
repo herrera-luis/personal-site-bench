@@ -1,0 +1,51 @@
+---
+import { type Locale, type AlternateLink, LOCALE_TAGS, t } from "../i18n/utils";
+import BaseHead from "../components/BaseHead.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import "../styles/global.css";
+
+export interface Props {
+  locale: Locale;
+  title: string;
+  description: string;
+  /** hreflang alternates (per locale + x-default). */
+  alternates?: AlternateLink[];
+  /** Per-locale equivalent URLs for the language switcher. */
+  hrefByLocale?: Partial<Record<Locale, string>>;
+  ogType?: "website" | "article";
+  publishedTime?: string;
+}
+
+const {
+  locale,
+  title,
+  description,
+  alternates = [],
+  hrefByLocale,
+  ogType,
+  publishedTime,
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang={LOCALE_TAGS[locale]}>
+  <head>
+    <BaseHead
+      locale={locale}
+      title={title}
+      description={description}
+      alternates={alternates}
+      ogType={ogType}
+      publishedTime={publishedTime}
+    />
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">{t(locale, "nav.skipToContent")}</a>
+    <Header locale={locale} hrefByLocale={hrefByLocale} />
+    <main id="main-content">
+      <slot />
+    </main>
+    <Footer locale={locale} />
+  </body>
+</html>
