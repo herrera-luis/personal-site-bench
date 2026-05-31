@@ -1,0 +1,40 @@
+---
+title: 'Hola, mundo'
+dek: 'Una primera nota sobre cómo construir un hogar bilingüe y sereno en la web.'
+pubDate: 2026-01-15
+locale: 'es'
+description: 'Un artículo introductorio que demuestra la plantilla bilingüe en Astro + MDX, los controles de diseño y los componentes importados.'
+layoutVariant: 'wide'
+showToc: true
+---
+
+import Callout from '@/components/Callout.astro';
+
+Este es el primer artículo de **Personal Site**: un lugar deliberadamente
+pequeño para la escritura extensa en dos idiomas. Existe para demostrar que la
+plantilla funciona de principio a fin: tipografía, localización, feeds y
+componentes embebidos.
+
+<Callout title="Por qué existe esto">
+  Cada artículo vive en una sola carpeta con un archivo MDX por idioma. Añadir
+  un texto nuevo nunca requiere tocar el código de rutas.
+</Callout>
+
+## Escribir sin distracciones
+
+La vista de lectura usa una pila de fuentes del sistema, una paleta sobria y
+respeta tu ajuste de `prefers-color-scheme`. No se descargan fuentes web y no se
+necesita JavaScript en el cliente para leer ni navegar.
+
+### Estructura personalizada por artículo
+
+Los controles del frontmatter como `layoutVariant` y `showToc` permiten que un
+artículo concreto elija una columna más ancha o una tabla de contenidos sin
+afectar al resto del sitio. Este artículo define `layoutVariant: 'wide'` y
+`showToc: true`.
+
+## Dos idiomas, una sola fuente de verdad
+
+Cada artículo tiene su contraparte en inglés y en español. El selector de idioma
+de la cabecera conserva tu lugar: cambia desde esta página y llegarás a la
+versión en inglés del mismo artículo.
