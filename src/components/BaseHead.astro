@@ -1,0 +1,67 @@
+---
+import { getCounterpartPath } from '@/i18n/config';
+import type { Locale } from '@/i18n/config';
+
+interface Props {
+  title: string;
+  description: string;
+  locale: Locale;
+  /** Optional OpenGraph image (absolute or root-relative path). */
+  ogImage?: string;
+  /** OpenGraph type, defaults to 'website'. */
+  ogType?: string;
+}
+
+const { title, description, locale, ogImage, ogType = 'website' } = Astro.props;
+
+const site = Astro.site ?? new URL('https://personal-site.example');
+const pathname = Astro.url.pathname;
+
+const canonicalURL = new URL(pathname, site);
+
+// hreflang alternates: en, es, x-default (-> en) — path-preserving.
+const enPath = getCounterpartPath(pathname, 'en');
+const esPath = getCounterpartPath(pathname, 'es');
+const enURL = new URL(enPath, site).href;
+const esURL = new URL(esPath, site).href;
+
+const ogLocale = locale === 'es' ? 'es_ES' : 'en_US';
+const ogImageURL = ogImage ? new URL(ogImage, site).href : undefined;
+---
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="generator" content={Astro.generator} />
+
+<title>{title}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonicalURL.href} />
+
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+<!-- hreflang alternates -->
+<link rel="alternate" hreflang="en" href={enURL} />
+<link rel="alternate" hreflang="es" href={esURL} />
+<link rel="alternate" hreflang="x-default" href={enURL} />
+
+<!-- OpenGraph -->
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:type" content={ogType} />
+<meta property="og:url" content={canonicalURL.href} />
+<meta property="og:locale" content={ogLocale} />
+{ogImageURL && <meta property="og:image" content={ogImageURL} />}
+
+<!-- Twitter card -->
+<meta name="twitter:card" content={ogImageURL ? 'summary_large_image' : 'summary'} />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+{ogImageURL && <meta name="twitter:image" content={ogImageURL} />}
+
+<!-- Per-locale RSS autodiscovery -->
+<link
+  rel="alternate"
+  type="application/rss+xml"
+  title={title}
+  href={new URL(`/${locale}/rss.xml`, site).href}
+/>
