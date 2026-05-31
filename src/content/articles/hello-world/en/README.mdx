@@ -1,0 +1,38 @@
+---
+title: 'Hello, World'
+dek: 'A first note on building a calm, bilingual home on the web.'
+pubDate: 2026-01-15
+locale: 'en'
+description: 'An introductory article demonstrating the bilingual Astro + MDX template, custom layout controls, and imported components.'
+layoutVariant: 'wide'
+showToc: true
+---
+
+import Callout from '@/components/Callout.astro';
+
+This is the first article on **Personal Site** — a deliberately small place for
+long-form writing in two languages. It exists to prove that the template works
+end to end: typography, localization, feeds, and embedded components.
+
+<Callout title="Why this exists">
+  Every article lives in a single folder with one MDX file per locale. Adding a
+  new piece never requires touching the routing code.
+</Callout>
+
+## Writing without distraction
+
+The reading view uses a system font stack, a restrained palette, and respects
+your `prefers-color-scheme` setting. No web fonts are downloaded and no client
+JavaScript is required to read or navigate.
+
+### Custom structure per article
+
+Frontmatter controls such as `layoutVariant` and `showToc` let an individual
+article opt into a wider column or a table of contents without affecting the
+rest of the site. This article sets `layoutVariant: 'wide'` and `showToc: true`.
+
+## Two languages, one source of truth
+
+Each article has an English and a Spanish counterpart. The language switcher in
+the header preserves your place: switch from this page and you land on the
+Spanish version of the very same article.
