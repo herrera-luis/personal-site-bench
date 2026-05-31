@@ -1,0 +1,12 @@
+---
+// Shared component importable from MDX article bodies — proves that an article
+// can vary its structure by importing and rendering shared components.
+interface Props {
+  title?: string;
+}
+const { title } = Astro.props;
+---
+<aside class="callout">
+  {title && <div class="callout-title">{title}</div>}
+  <div class="callout-body"><slot /></div>
+</aside>

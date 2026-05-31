@@ -1,0 +1,37 @@
+---
+import type { Locale } from '../config/site';
+import { localizedPath, stripLocale, useTranslations } from '../i18n/utils';
+
+interface Props {
+  locale: Locale;
+  pathname: string;
+}
+
+const { locale, pathname } = Astro.props;
+const t = useTranslations(locale);
+const current = stripLocale(pathname);
+
+const items = [
+  { href: localizedPath(locale, ''), label: t('nav.home'), match: '/' },
+  { href: localizedPath(locale, 'articles/'), label: t('nav.articles'), match: '/articles/' },
+  { href: localizedPath(locale, 'about/'), label: t('nav.about'), match: '/about/' },
+];
+
+function isCurrent(match: string): boolean {
+  if (match === '/') return current === '/';
+  return current.startsWith(match);
+}
+---
+<nav class="main-nav" aria-label="Primary">
+  <ul>
+    {
+      items.map((item) => (
+        <li>
+          <a href={item.href} aria-current={isCurrent(item.match) ? 'page' : undefined}>
+            {item.label}
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</nav>

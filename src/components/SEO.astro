@@ -1,0 +1,36 @@
+---
+import type { Locale } from '../config/site';
+import { SITE } from '../config/site';
+import { ogLocale } from '../i18n/ui';
+import { getAlternates, absoluteUrl } from '../i18n/utils';
+
+interface Props {
+  locale: Locale;
+  title: string;
+  description: string;
+  pathname: string;
+  ogType?: 'website' | 'article';
+}
+
+const { locale, title, description, pathname, ogType = 'website' } = Astro.props;
+const alternates = getAlternates(pathname);
+const canonical = absoluteUrl(pathname);
+---
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>{title}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonical} />
+
+<!-- hreflang alternates -->
+<link rel="alternate" hreflang="en" href={alternates.en} />
+<link rel="alternate" hreflang="es" href={alternates.es} />
+<link rel="alternate" hreflang="x-default" href={alternates.xDefault} />
+
+<!-- OpenGraph -->
+<meta property="og:type" content={ogType} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+<meta property="og:locale" content={ogLocale[locale]} />
+<meta property="og:site_name" content={SITE.name} />
