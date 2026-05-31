@@ -1,0 +1,46 @@
+---
+import { LOCALES, type Locale, t, localizedPath, formatDate, buildAlternates } from "../../../i18n/utils";
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import { getPublishedArticles, articlePath, type BlogEntry } from "../../../lib/blog";
+
+export function getStaticPaths() {
+  return LOCALES.map((locale) => ({ params: { locale } }));
+}
+
+const locale = Astro.params.locale as Locale;
+const articles: BlogEntry[] = await getPublishedArticles(locale);
+
+const pathByLocale = Object.fromEntries(
+  LOCALES.map((l) => [l, localizedPath(l, "blog")]),
+) as Record<Locale, string>;
+const alternates = buildAlternates(Astro.site!, pathByLocale);
+---
+
+<BaseLayout
+  locale={locale}
+  title={t(locale, "blog.title")}
+  description={t(locale, "site.description")}
+  alternates={alternates}
+  hrefByLocale={pathByLocale}
+>
+  <h1>{t(locale, "blog.heading")}</h1>
+  {
+    articles.length === 0 ? (
+      <p>{t(locale, "blog.empty")}</p>
+    ) : (
+      <ul class="article-list">
+        {articles.map((article) => (
+          <li class="article-card">
+            <h3>
+              <a href={articlePath(article)}>{article.data.title}</a>
+            </h3>
+            <p class="article-meta">
+              {t(locale, "article.published")}: {formatDate(article.data.pubDate, locale)}
+            </p>
+            <p>{article.data.description}</p>
+          </li>
+        ))}
+      </ul>
+    )
+  }
+</BaseLayout>

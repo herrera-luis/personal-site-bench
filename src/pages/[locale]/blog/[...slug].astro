@@ -1,0 +1,63 @@
+---
+import { render } from "astro:content";
+import {
+  type Locale,
+  t,
+  localizedPath,
+  formatDate,
+  buildAlternates,
+} from "../../../i18n/utils";
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import {
+  getAllPublishedArticles,
+  articlePath,
+  slugOf,
+  translationPath,
+} from "../../../lib/blog";
+
+export async function getStaticPaths() {
+  const articles = await getAllPublishedArticles();
+  return articles.map((entry) => ({
+    params: { locale: entry.data.locale, slug: slugOf(entry) },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const locale = entry.data.locale as Locale;
+const { Content } = await render(entry);
+
+// Translation linkage: find this article's counterpart in the other locale so
+// the language switcher can link to it (falling back to home when absent).
+const other: Locale = locale === "en" ? "es" : "en";
+const otherPath = await translationPath(entry.data.translationKey, other);
+
+const hrefByLocale: Partial<Record<Locale, string>> = {
+  [locale]: articlePath(entry),
+};
+if (otherPath) hrefByLocale[other] = otherPath;
+
+const alternates = buildAlternates(Astro.site!, hrefByLocale);
+const publishedISO = entry.data.pubDate.toISOString();
+---
+
+<BaseLayout
+  locale={locale}
+  title={entry.data.title}
+  description={entry.data.description}
+  alternates={alternates}
+  hrefByLocale={hrefByLocale}
+  ogType="article"
+  publishedTime={publishedISO}
+>
+  <article>
+    <header>
+      <h1>{entry.data.title}</h1>
+      <p class="article-meta">
+        {t(locale, "article.published")}: {formatDate(entry.data.pubDate, locale)}
+      </p>
+    </header>
+    <Content />
+  </article>
+  <p><a href={localizedPath(locale, "blog")}>← {t(locale, "article.backToBlog")}</a></p>
+</BaseLayout>
