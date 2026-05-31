@@ -1,0 +1,37 @@
+---
+import { render } from 'astro:content';
+import { LOCALES, type Locale } from '../../../config/site';
+import { getArticlesByLocale } from '../../../lib/articles';
+import ArticleLayout from '../../../layouts/ArticleLayout.astro';
+
+export async function getStaticPaths() {
+  const paths = [];
+  for (const locale of LOCALES) {
+    const articles = await getArticlesByLocale(locale);
+    for (const a of articles) {
+      paths.push({
+        params: { locale, slug: a.slug },
+        props: { entry: a.entry },
+      });
+    }
+  }
+  return paths;
+}
+
+const locale = Astro.params.locale as Locale;
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const data = entry.data;
+const description = data.description ?? data.dek;
+---
+<ArticleLayout
+  locale={locale}
+  title={data.title}
+  dek={data.dek}
+  date={data.date}
+  description={description}
+  wide={data.wide}
+  hideDek={data.hideDek}
+>
+  <Content />
+</ArticleLayout>

@@ -1,0 +1,39 @@
+---
+import { LOCALES, SITE, type Locale } from '../../config/site';
+import { useTranslations } from '../../i18n/utils';
+import { ui } from '../../i18n/ui';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export function getStaticPaths() {
+  return LOCALES.map((locale) => ({ params: { locale } }));
+}
+
+const locale = Astro.params.locale as Locale;
+const t = useTranslations(locale);
+
+const bio: Record<Locale, string> = {
+  en: `${SITE.name} is a small, content-first space where A. Writer publishes long-form notes on building software, writing, and the occasional experiment. No newsletters, no funnels — just writing.`,
+  es: `${SITE.name} es un pequeño espacio centrado en el contenido donde A. Writer publica notas extensas sobre la creación de software, la escritura y algún experimento ocasional. Sin boletines, sin embudos: solo escritura.`,
+};
+---
+<BaseLayout
+  locale={locale}
+  title={ui[locale]['seo.about.title']}
+  description={ui[locale]['seo.about.description']}
+>
+  <article class="article">
+    <h1>{t('about.title')}</h1>
+    <div class="prose">
+      <p>{bio[locale]}</p>
+      {
+        SITE.profileUrl && (
+          <p>
+            <a href={SITE.profileUrl} rel="me noopener" target="_blank">
+              {t('about.profile')} →
+            </a>
+          </p>
+        )
+      }
+    </div>
+  </article>
+</BaseLayout>

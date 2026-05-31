@@ -1,0 +1,48 @@
+---
+import { LOCALES, SITE, type Locale } from '../../config/site';
+import { useTranslations, localizedPath } from '../../i18n/utils';
+import { getArticlesByLocale } from '../../lib/articles';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ArticleCard from '../../components/ArticleCard.astro';
+import { ui } from '../../i18n/ui';
+
+export function getStaticPaths() {
+  return LOCALES.map((locale) => ({ params: { locale } }));
+}
+
+const locale = Astro.params.locale as Locale;
+const t = useTranslations(locale);
+const articles = await getArticlesByLocale(locale);
+---
+<BaseLayout
+  locale={locale}
+  title={ui[locale]['seo.home.title']}
+  description={ui[locale]['seo.home.description']}
+>
+  <section class="identity">
+    <h1>{SITE.name}</h1>
+    <p class="tagline">{t('site.tagline')}</p>
+  </section>
+
+  <section class="latest">
+    <h2>{t('home.latest')}</h2>
+    {
+      articles.length === 0 ? (
+        <p class="empty-state">{t('home.empty')}</p>
+      ) : (
+        <ul class="article-list">
+          {articles.map((a) => (
+            <ArticleCard
+              href={localizedPath(locale, `articles/${a.slug}/`)}
+              title={a.entry.data.title}
+              dek={a.entry.data.dek}
+              date={a.entry.data.date}
+              locale={locale}
+              readMore={t('home.readMore')}
+            />
+          ))}
+        </ul>
+      )
+    }
+  </section>
+</BaseLayout>
