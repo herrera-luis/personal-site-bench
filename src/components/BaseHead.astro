@@ -1,0 +1,72 @@
+---
+import {
+  type Locale,
+  type AlternateLink,
+  OG_LOCALE_TAGS,
+  LOCALE_TAGS,
+  t,
+} from "../i18n/utils";
+
+export interface Props {
+  locale: Locale;
+  title: string;
+  description: string;
+  /** hreflang alternates incl. x-default; built by the page via buildAlternates(). */
+  alternates?: AlternateLink[];
+  /** og:type — "website" for listing pages, "article" for posts. */
+  ogType?: "website" | "article";
+  /** Article-only metadata. */
+  publishedTime?: string;
+}
+
+const {
+  locale,
+  title,
+  description,
+  alternates = [],
+  ogType = "website",
+  publishedTime,
+} = Astro.props;
+
+const siteName = t(locale, "site.title");
+const fullTitle = title === siteName ? title : `${title} · ${siteName}`;
+
+// Canonical absolute URL for the current page.
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+---
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="generator" content={Astro.generator} />
+
+<title>{fullTitle}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonical} />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+{/* hreflang alternates (one per locale + x-default) */}
+{
+  alternates.map((alt) => (
+    <link rel="alternate" hreflang={alt.hreflang} href={alt.href} />
+  ))
+}
+
+{/* Open Graph */}
+<meta property="og:type" content={ogType} />
+<meta property="og:title" content={fullTitle} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+<meta property="og:site_name" content={siteName} />
+<meta property="og:locale" content={OG_LOCALE_TAGS[locale]} />
+{
+  publishedTime && (
+    <meta property="article:published_time" content={publishedTime} />
+  )
+}
+
+{/* Twitter card */}
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={fullTitle} />
+<meta name="twitter:description" content={description} />
+
+<meta http-equiv="content-language" content={LOCALE_TAGS[locale]} />

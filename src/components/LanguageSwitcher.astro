@@ -1,0 +1,59 @@
+---
+import { LOCALES, type Locale, t, localizedPath } from "../i18n/utils";
+
+export interface Props {
+  locale: Locale;
+  /**
+   * Map of locale -> href for the equivalent page in that locale. When a
+   * locale is missing (no translation), the switcher falls back to that
+   * locale's home page instead of producing a broken link.
+   */
+  hrefByLocale?: Partial<Record<Locale, string>>;
+}
+
+const { locale, hrefByLocale = {} } = Astro.props;
+---
+
+<nav class="lang-switcher" aria-label={t(locale, "lang.switch")}>
+  {
+    LOCALES.map((target) => {
+      const isCurrent = target === locale;
+      const href = hrefByLocale[target] ?? localizedPath(target);
+      return (
+        <a
+          href={href}
+          hreflang={target}
+          lang={target}
+          class:list={["lang-link", { active: isCurrent }]}
+          aria-current={isCurrent ? "true" : undefined}
+        >
+          {target.toUpperCase()}
+        </a>
+      );
+    })
+  }
+</nav>
+
+<style>
+  .lang-switcher {
+    display: inline-flex;
+    gap: 0.25rem;
+    align-items: center;
+  }
+  .lang-link {
+    padding: 0.15rem 0.45rem;
+    border-radius: 0.35rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-decoration: none;
+    color: var(--color-muted);
+  }
+  .lang-link:hover {
+    background: var(--color-surface);
+    color: var(--color-text);
+  }
+  .lang-link.active {
+    background: var(--color-accent);
+    color: #fff;
+  }
+</style>
