@@ -1,0 +1,24 @@
+{
+  "name": "personal-site",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro check && astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "test": "node --test \"tests/**/*.test.mjs\""
+  },
+  "dependencies": {
+    "@astrojs/mdx": "^4.3.0",
+    "@astrojs/rss": "^4.0.11",
+    "@astrojs/sitemap": "^3.2.1",
+    "@astrojs/vercel": "^8.1.0",
+    "astro": "^5.6.0"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.4",
+    "typescript": "^5.7.0"
+  }
+}
