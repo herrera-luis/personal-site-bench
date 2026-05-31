@@ -1,0 +1,29 @@
+{
+  "name": "personal-site-bench",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Bilingual (English + Spanish) personal site built with Astro + MDX.",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "test": "node tests/build-output.test.mjs"
+  },
+  "dependencies": {
+    "@astrojs/mdx": "3.1.9",
+    "@astrojs/rss": "4.0.18",
+    "@astrojs/sitemap": "3.2.1",
+    "@astrojs/vercel": "7.8.2",
+    "astro": "4.16.19"
+  },
+  "devDependencies": {
+    "@astrojs/check": "0.9.9",
+    "typescript": "5.9.3"
+  }
+}
