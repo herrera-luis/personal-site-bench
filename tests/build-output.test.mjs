@@ -57,21 +57,21 @@ function count(haystack, needle) {
   return haystack.split(needle).length - 1;
 }
 
-// Extract the value of `attr=\"...\"` that immediately follows `marker`.
+// Extract the value of `attr="..."` that immediately follows `marker`.
 function attrAfter(html, marker, attr) {
   const start = html.indexOf(marker);
   if (start === -1) return null;
-  const at = html.indexOf(`${attr}=\"`, start);
+  const at = html.indexOf(`${attr}="`, start);
   if (at === -1) return null;
   const from = at + attr.length + 2;
-  const end = html.indexOf('\"', from);
+  const end = html.indexOf('"', from);
   if (end === -1) return null;
   return html.slice(from, end);
 }
 
 async function main() {
-  console.log('\\nPost-build output tests');
-  console.log(`Output directory: ${OUT ? OUT.replace(root + '/', '') : '(none found)'}\\n`);
+  console.log('\nPost-build output tests');
+  console.log(`Output directory: ${OUT ? OUT.replace(root + '/', '') : '(none found)'}\n`);
 
   if (!OUT) {
     fail('A3 build output directory exists', `none of: ${CANDIDATE_DIRS.join(', ')}`);
@@ -102,10 +102,10 @@ async function main() {
   assert('B4 en article exists', await exists('en/articles/hello-world/index.html'));
   assert('B4 es article exists', await exists('es/articles/hello-world/index.html'));
   assert('B4 en article has <h1>', enArt.includes('<h1>'));
-  assert('B4 en article has <h3> dek', enArt.includes('class=\"dek\"') && enArt.includes('<h3'));
-  assert('B4 en article has meta line', enArt.includes('class=\"meta\"') && enArt.includes('Published'));
-  assert('B4 en article has Callout output', enArt.includes('class=\"callout\"'));
-  assert('B4 es article has Callout output', esArt.includes('class=\"callout\"'));
+  assert('B4 en article has <h3> dek', enArt.includes('class="dek"') && enArt.includes('<h3'));
+  assert('B4 en article has meta line', enArt.includes('class="meta"') && enArt.includes('Published'));
+  assert('B4 en article has Callout output', enArt.includes('class="callout"'));
+  assert('B4 es article has Callout output', esArt.includes('class="callout"'));
   assert('B4 es article meta localized', esArt.includes('Publicado'));
 
   // B5: the localized empty-state strings are defined in the dictionary (the
@@ -119,7 +119,7 @@ async function main() {
   // ---- C. Root redirect, JS-free ----
   console.log('C. Root redirect (JS-free)');
   const rootHtml = await read('index.html');
-  const refreshTarget = attrAfter(rootHtml, 'http-equiv=\"refresh\"', 'content');
+  const refreshTarget = attrAfter(rootHtml, 'http-equiv="refresh"', 'content');
   assert('C1 root has meta-refresh redirect', !!refreshTarget, 'no meta refresh found');
   if (refreshTarget) {
     const urlIdx = refreshTarget.indexOf('url=');
@@ -142,10 +142,10 @@ async function main() {
   ];
   for (const p of pages) {
     const html = await read(p);
-    const enAlt = attrAfter(html, 'hreflang=\"en\"', 'href');
-    const esAlt = attrAfter(html, 'hreflang=\"es\"', 'href');
-    const xAlt = attrAfter(html, 'hreflang=\"x-default\"', 'href');
-    const total = count(html, 'rel=\"alternate\" hreflang=\"');
+    const enAlt = attrAfter(html, 'hreflang="en"', 'href');
+    const esAlt = attrAfter(html, 'hreflang="es"', 'href');
+    const xAlt = attrAfter(html, 'hreflang="x-default"', 'href');
+    const total = count(html, 'rel="alternate" hreflang="');
     assert(`D1 ${p} has exactly 3 hreflang alternates`, total === 3, `found ${total}`);
     assert(`D2 ${p} x-default == en URL`, !!enAlt && !!xAlt && enAlt === xAlt);
     if (enAlt && esAlt) {
@@ -164,7 +164,7 @@ async function main() {
   // ---- E. Language switcher (path-preserving, JS-free) ----
   console.log('E. Language switcher');
   function switcherHref(html) {
-    return attrAfter(html, 'class=\"lang-switcher\"', 'href');
+    return attrAfter(html, 'class="lang-switcher"', 'href');
   }
   assert('E1 en article switcher -> /es/articles/hello-world/', switcherHref(enArt) === '/es/articles/hello-world/', switcherHref(enArt));
   assert('E1 es article switcher -> /en/articles/hello-world/', switcherHref(esArt) === '/en/articles/hello-world/', switcherHref(esArt));
@@ -173,7 +173,7 @@ async function main() {
   assert('E3 en about switcher -> /es/about/', switcherHref(enAbout) === '/es/about/');
   assert('E3 es about switcher -> /en/about/', switcherHref(esAbout) === '/en/about/');
   // E4: switcher block contains a real href and no inline JS handler.
-  const switcherStart = enArt.indexOf('class=\"lang-switcher\"');
+  const switcherStart = enArt.indexOf('class="lang-switcher"');
   const switcherSlice = switcherStart === -1 ? '' : enArt.slice(switcherStart, switcherStart + 160);
   assert('E4 switcher has no onclick/JS', !switcherSlice.toLowerCase().includes('onclick'));
 
@@ -201,9 +201,9 @@ async function main() {
   const esHome = await read('es/index.html');
   assert('G2 en title localized', enHome.includes('<title>') && enHome.includes('Home</title>'));
   assert('G2 es title localized', esHome.includes('<title>') && esHome.includes('Inicio</title>'));
-  assert('G2 en has meta description', enHome.includes('<meta name=\"description\" content=\"'));
-  assert('G2 en og:locale en_US', enHome.includes('property=\"og:locale\" content=\"en_US\"'));
-  assert('G2 es og:locale es_ES', esHome.includes('property=\"og:locale\" content=\"es_ES\"'));
+  assert('G2 en has meta description', enHome.includes('<meta name="description" content="'));
+  assert('G2 en og:locale en_US', enHome.includes('property="og:locale" content="en_US"'));
+  assert('G2 es og:locale es_ES', esHome.includes('property="og:locale" content="es_ES"'));
 
   // ---- H. Progressive enhancement / a11y ----
   console.log('H. Progressive enhancement / a11y');
@@ -213,8 +213,8 @@ async function main() {
     scriptCount += count(html.toLowerCase(), '<script');
   }
   assert('H1 no <script> tags required for nav/switcher/redirect', scriptCount === 0, `found ${scriptCount}`);
-  assert('H2 html lang set per locale', enHome.includes('<html lang=\"en\"') && esHome.includes('<html lang=\"es\"'));
-  assert('H2 skip-to-content link present', enHome.includes('class=\"skip-link\"'));
+  assert('H2 html lang set per locale', enHome.includes('<html lang="en"') && esHome.includes('<html lang="es"'));
+  assert('H2 skip-to-content link present', enHome.includes('class="skip-link"'));
 
   // ---- I. Content model invariant ----
   console.log('I. Content model invariant');
@@ -237,7 +237,7 @@ async function main() {
 }
 
 function report() {
-  console.log(`\\n${passed} passed, ${failed} failed\\n`);
+  console.log(`\n${passed} passed, ${failed} failed\n`);
   if (failed > 0) {
     console.error('FAILED:');
     for (const f of failures) console.error(`  - ${f}`);
