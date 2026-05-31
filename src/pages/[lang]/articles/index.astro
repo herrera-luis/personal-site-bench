@@ -1,0 +1,53 @@
+---
+import { locales } from '@/i18n/config';
+import type { Locale } from '@/i18n/config';
+import { useTranslations } from '@/i18n/ui';
+import { getArticles, getSlug } from '@/lib/articles';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+
+export function getStaticPaths() {
+  return locales.map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as Locale;
+const t = useTranslations(lang);
+const articles = await getArticles(lang);
+
+const title = `${t('site.name')} — ${t('articles.title')}`;
+const description = t('articles.intro');
+---
+
+<BaseLayout title={title} description={description} locale={lang}>
+  <section>
+    <h1>{t('articles.title')}</h1>
+    <p class="tagline">{t('articles.intro')}</p>
+    {
+      articles.length === 0 ? (
+        <p class="empty-state">{t('articles.empty')}</p>
+      ) : (
+        <ul class="article-list">
+          {articles.map((entry) => {
+            const slug = getSlug(entry);
+            const dateLabel = entry.data.pubDate.toLocaleDateString(
+              lang === 'es' ? 'es-ES' : 'en-US',
+              { year: 'numeric', month: 'long', day: 'numeric' }
+            );
+            return (
+              <li>
+                <h3>
+                  <a href={`/${lang}/articles/${slug}/`}>{entry.data.title}</a>
+                </h3>
+                <p class="dek">{entry.data.dek}</p>
+                <p class="meta">
+                  <time datetime={entry.data.pubDate.toISOString()}>{dateLabel}</time>
+                  {' · '}
+                  <a href={`/${lang}/articles/${slug}/`}>{t('articles.readMore')}</a>
+                </p>
+              </li>
+            );
+          })}
+        </ul>
+      )
+    }
+  </section>
+</BaseLayout>
