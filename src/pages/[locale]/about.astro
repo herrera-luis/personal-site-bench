@@ -1,0 +1,31 @@
+---
+import { LOCALES, type Locale, t, localizedPath, buildAlternates } from "../../i18n/utils";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+export function getStaticPaths() {
+  return LOCALES.map((locale) => ({ params: { locale } }));
+}
+
+const locale = Astro.params.locale as Locale;
+
+const aboutBody: Record<Locale, string> = {
+  en: "I'm a software engineer who likes building things on the web. This site is where I publish notes, tutorials, and the occasional opinion — in both English and Spanish.",
+  es: "Soy ingeniero de software y me gusta construir cosas en la web. En este sitio publico notas, tutoriales y alguna que otra opinión — tanto en inglés como en español.",
+};
+
+const pathByLocale = Object.fromEntries(
+  LOCALES.map((l) => [l, localizedPath(l, "about")]),
+) as Record<Locale, string>;
+const alternates = buildAlternates(Astro.site!, pathByLocale);
+---
+
+<BaseLayout
+  locale={locale}
+  title={t(locale, "about.title")}
+  description={aboutBody[locale]}
+  alternates={alternates}
+  hrefByLocale={pathByLocale}
+>
+  <h1>{t(locale, "about.heading")}</h1>
+  <p>{aboutBody[locale]}</p>
+</BaseLayout>

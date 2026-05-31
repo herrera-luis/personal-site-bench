@@ -1,0 +1,55 @@
+---
+import { LOCALES, type Locale, t, localizedPath, formatDate, buildAlternates } from "../../i18n/utils";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getPublishedArticles, articlePath, type BlogEntry } from "../../lib/blog";
+
+export function getStaticPaths() {
+  return LOCALES.map((locale) => ({ params: { locale } }));
+}
+
+const locale = Astro.params.locale as Locale;
+const articles: BlogEntry[] = (await getPublishedArticles(locale)).slice(0, 5);
+
+// Home exists in every locale, so all locales are alternates of one another.
+const pathByLocale = Object.fromEntries(
+  LOCALES.map((l) => [l, localizedPath(l)]),
+) as Record<Locale, string>;
+const alternates = buildAlternates(Astro.site!, pathByLocale);
+---
+
+<BaseLayout
+  locale={locale}
+  title={t(locale, "site.title")}
+  description={t(locale, "site.description")}
+  alternates={alternates}
+  hrefByLocale={pathByLocale}
+>
+  <section class="intro">
+    <h1>{t(locale, "home.intro.title")}</h1>
+    <p>{t(locale, "home.intro.body")}</p>
+  </section>
+
+  <section>
+    <h2>{t(locale, "home.recent.title")}</h2>
+    {
+      articles.length === 0 ? (
+        <p>{t(locale, "home.recent.empty")}</p>
+      ) : (
+        <ul class="article-list">
+          {articles.map((article) => (
+            <li class="article-card">
+              <h3>
+                <a href={articlePath(article)}>{article.data.title}</a>
+              </h3>
+              <p class="article-meta">
+                {t(locale, "article.published")}: {formatDate(article.data.pubDate, locale)}
+              </p>
+              <p>{article.data.description}</p>
+            </li>
+          ))}
+        </ul>
+      )
+    }
+    <p><a href={localizedPath(locale, "blog")}>{t(locale, "home.recent.viewAll")} →</a></p>
+  </section>
+</BaseLayout>

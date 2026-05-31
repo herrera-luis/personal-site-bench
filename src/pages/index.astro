@@ -1,0 +1,7 @@
+---
+import { localizedPath, DEFAULT_LOCALE } from "../i18n/utils";
+
+// Root redirect to the default locale. Astro emits a meta-refresh + canonical
+// redirect for static output; Vercel's vercel.json provides a 308 fallback.
+return Astro.redirect(localizedPath(DEFAULT_LOCALE), 308);
+---
