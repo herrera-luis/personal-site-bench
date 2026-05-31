@@ -1,0 +1,39 @@
+---
+import { locales } from '@/i18n/config';
+import type { Locale } from '@/i18n/config';
+import { useTranslations } from '@/i18n/ui';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+
+export function getStaticPaths() {
+  return locales.map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as Locale;
+const t = useTranslations(lang);
+
+const bio = {
+  en: [
+    'A. Writer is a software engineer who writes about building things on the web, learning in public, and the craft of clear technical prose.',
+    'This site is intentionally small: no tracking, no newsletter pop-ups, no web fonts — just words that load fast and read well in both English and Spanish.',
+  ],
+  es: [
+    'A. Writer es ingeniero de software y escribe sobre cómo construir cosas en la web, aprender en público y el oficio de una prosa técnica clara.',
+    'Este sitio es deliberadamente pequeño: sin rastreadores, sin ventanas emergentes de boletín, sin fuentes web; solo palabras que cargan rápido y se leen bien en inglés y español.',
+  ],
+} satisfies Record<Locale, string[]>;
+
+const title = `${t('site.name')} — ${t('about.title')}`;
+const description = bio[lang][0];
+---
+
+<BaseLayout title={title} description={description} locale={lang}>
+  <article class="reading">
+    <h1>{t('about.title')}</h1>
+    {bio[lang].map((para) => <p>{para}</p>)}
+    <p>
+      <a href="https://example.com/a-writer" rel="me noopener" target="_blank">
+        {lang === 'es' ? 'Perfil externo' : 'External profile'}
+      </a>
+    </p>
+  </article>
+</BaseLayout>
