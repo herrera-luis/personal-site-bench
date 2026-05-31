@@ -1,0 +1,47 @@
+---
+import type { Locale } from '@/i18n/config';
+import { useTranslations } from '@/i18n/ui';
+import LanguageSwitcher from './LanguageSwitcher.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+
+const pathname = Astro.url.pathname;
+const base = `/${locale}`;
+
+const navItems = [
+  { href: `${base}/`, label: t('nav.home') },
+  { href: `${base}/articles/`, label: t('nav.articles') },
+  { href: `${base}/about/`, label: t('nav.about') },
+];
+
+function isCurrent(href: string): boolean {
+  if (href === `${base}/`) {
+    return pathname === `${base}/` || pathname === base;
+  }
+  return pathname === href || pathname.startsWith(href);
+}
+---
+
+<header class="site-header">
+  <div class="container">
+    <div class="brand">
+      <a href={`${base}/`}>{t('site.name')}</a>
+      <span class="roles">[{t('site.roles')}]</span>
+    </div>
+    <nav class="site-nav" aria-label="Primary">
+      {
+        navItems.map((item) => (
+          <a href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>
+            {item.label}
+          </a>
+        ))
+      }
+      <LanguageSwitcher locale={locale} />
+    </nav>
+  </div>
+</header>
