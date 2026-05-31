@@ -1,0 +1,27 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import ArticleList from '../../../components/ArticleList.astro';
+import { getArticles } from '../../../lib/articles';
+import { LOCALES, type Locale } from '../../../i18n/ui';
+import { useTranslations } from '../../../i18n/utils';
+
+export function getStaticPaths() {
+  return LOCALES.map((locale) => ({ params: { locale } }));
+}
+
+const { locale } = Astro.params as { locale: Locale };
+const t = useTranslations(locale);
+
+const articles = await getArticles(locale);
+const items = articles.map((a) => ({
+  slug: a.slug,
+  title: a.entry.data.title,
+  dek: a.entry.data.dek,
+  pubDate: a.entry.data.pubDate,
+}));
+---
+
+<BaseLayout title={t('meta.articles.title')} description={t('meta.articles.desc')} locale={locale}>
+  <h1 class="section-heading">{t('articles.heading')}</h1>
+  <ArticleList locale={locale} items={items} />
+</BaseLayout>

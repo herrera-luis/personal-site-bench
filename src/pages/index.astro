@@ -1,0 +1,22 @@
+---
+import { DEFAULT_LOCALE } from '../i18n/ui';
+import { SITE } from '../config';
+
+// Root redirect to the default locale. With `prefixDefaultLocale` +
+// `redirectToDefaultLocale`, Astro emits the redirect for this page; the
+// meta-refresh below is a JavaScript-free fallback that keeps `/` working.
+const target = `/${DEFAULT_LOCALE}/`;
+---
+
+<!doctype html>
+<html lang={DEFAULT_LOCALE}>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="refresh" content={`0;url=${target}`} />
+    <link rel="canonical" href={target} />
+    <title>{SITE.name}</title>
+  </head>
+  <body>
+    <p>Redirecting to <a href={target}>{target}</a>…</p>
+  </body>
+</html>
