@@ -1,0 +1,31 @@
+---
+import '../styles/global.css';
+import SeoHead from '../components/SeoHead.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import { getLocaleFromPath, type Locale } from '../i18n/utils';
+
+interface Props {
+  title: string;
+  description: string;
+  locale?: Locale;
+  wide?: boolean;
+}
+
+const { title, description, wide = false } = Astro.props;
+const locale = Astro.props.locale ?? getLocaleFromPath(Astro.url.pathname);
+---
+
+<!doctype html>
+<html lang={locale}>
+  <head>
+    <SeoHead title={title} description={description} locale={locale} />
+  </head>
+  <body>
+    <SiteHeader locale={locale} />
+    <main class={wide ? 'container container--wide' : 'container'}>
+      <slot />
+    </main>
+    <SiteFooter locale={locale} />
+  </body>
+</html>

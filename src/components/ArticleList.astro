@@ -1,0 +1,44 @@
+---
+import { useTranslations, type Locale } from '../i18n/utils';
+
+export interface ArticleListItem {
+  slug: string;
+  title: string;
+  dek: string;
+  pubDate: Date;
+}
+
+interface Props {
+  locale: Locale;
+  items: ArticleListItem[];
+}
+
+const { locale, items } = Astro.props;
+const t = useTranslations(locale);
+const dateFmt = new Intl.DateTimeFormat(locale, { dateStyle: 'long' });
+---
+
+{
+  items.length === 0 ? (
+    <p class="empty">{t('articles.empty')}</p>
+  ) : (
+    <ul class="article-list">
+      {items.map((item) => {
+        const href = `/${locale}/articles/${item.slug}/`;
+        return (
+          <li class="article-list__item">
+            <h2 class="article-list__title">
+              <a href={href}>{item.title}</a>
+            </h2>
+            <p class="article-list__dek">{item.dek}</p>
+            <p class="article-list__meta">
+              <time datetime={item.pubDate.toISOString()}>{dateFmt.format(item.pubDate)}</time>
+              {' · '}
+              <a href={href}>{t('article.readMore')}</a>
+            </p>
+          </li>
+        );
+      })}
+    </ul>
+  )
+}
