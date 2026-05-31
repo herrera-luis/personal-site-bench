@@ -1,0 +1,42 @@
+---
+import type { Locale } from '@/i18n/config';
+import { useTranslations } from '@/i18n/ui';
+import BaseHead from '@/components/BaseHead.astro';
+import SiteHeader from '@/components/SiteHeader.astro';
+import SiteFooter from '@/components/SiteFooter.astro';
+import '@/styles/global.css';
+
+interface Props {
+  title: string;
+  description: string;
+  locale: Locale;
+  ogImage?: string;
+  ogType?: string;
+}
+
+const { title, description, locale, ogImage, ogType } = Astro.props;
+const t = useTranslations(locale);
+---
+
+<!doctype html>
+<html lang={locale}>
+  <head>
+    <BaseHead
+      title={title}
+      description={description}
+      locale={locale}
+      ogImage={ogImage}
+      ogType={ogType}
+    />
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">{t('skip.toContent')}</a>
+    <SiteHeader locale={locale} />
+    <main id="main-content">
+      <div class="container">
+        <slot />
+      </div>
+    </main>
+    <SiteFooter locale={locale} />
+  </body>
+</html>
