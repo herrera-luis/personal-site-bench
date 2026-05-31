@@ -1,0 +1,86 @@
+---
+import type { Locale } from '@/i18n/config';
+import { useTranslations } from '@/i18n/ui';
+import BaseLayout from './BaseLayout.astro';
+
+export type LayoutVariant = 'default' | 'wide' | 'feature';
+
+interface Heading {
+  depth: number;
+  slug: string;
+  text: string;
+}
+
+interface Props {
+  title: string;
+  dek: string;
+  description: string;
+  pubDate: Date;
+  locale: Locale;
+  ogImage?: string;
+  layoutVariant?: LayoutVariant;
+  showToc?: boolean;
+  headings?: Heading[];
+}
+
+const {
+  title,
+  dek,
+  description,
+  pubDate,
+  locale,
+  ogImage,
+  layoutVariant = 'default',
+  showToc = false,
+  headings = [],
+} = Astro.props;
+
+const t = useTranslations(locale);
+
+const dateLabel = pubDate.toLocaleDateString(locale === 'es' ? 'es-ES' : 'en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+
+// Only surface H2/H3 in the table of contents.
+const tocHeadings = headings.filter((h) => h.depth === 2 || h.depth === 3);
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  locale={locale}
+  ogImage={ogImage}
+  ogType="article"
+>
+  <article class={`reading ${layoutVariant}`}>
+    <header class="article-header">
+      <h1>{title}</h1>
+      <h3 class="dek">{dek}</h3>
+      <p class="meta">
+        <time datetime={pubDate.toISOString()}>{t('meta.publishedOn')} {dateLabel}</time>
+        <span> · {t('meta.by')} A. Writer</span>
+      </p>
+    </header>
+
+    {
+      showToc && tocHeadings.length > 0 && (
+        <nav class="toc" aria-label="Table of contents">
+          <p>{t('nav.articles')}</p>
+          <ul>
+            {tocHeadings.map((h) => (
+              <li>
+                <a href={`#${h.slug}`}>{h.text}</a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      )
+    }
+
+    <div class="prose">
+      <slot />
+    </div>
+  </article>
+</BaseLayout>
