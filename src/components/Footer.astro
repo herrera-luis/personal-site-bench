@@ -1,0 +1,23 @@
+---
+import type { Locale } from '../config/site';
+import { SITE } from '../config/site';
+import { localizedPath, useTranslations } from '../i18n/utils';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+const year = new Date().getFullYear();
+---
+<footer class="site-footer">
+  <div class="container bar">
+    <ul>
+      <li><a href={SITE.social.github} rel="me">GitHub</a></li>
+      <li><a href={SITE.social.mastodon} rel="me">Mastodon</a></li>
+      <li><a href={localizedPath(locale, 'rss.xml')}>{t('footer.rss')}</a></li>
+    </ul>
+    <p class="copyright">© {year} {SITE.name}. {t('footer.copyright')}</p>
+  </div>
+</footer>

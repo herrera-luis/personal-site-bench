@@ -1,0 +1,27 @@
+---
+import type { Locale } from '../config/site';
+import { SITE } from '../config/site';
+import { localizedPath, useTranslations } from '../i18n/utils';
+import Nav from './Nav.astro';
+import LanguageSwitcher from './LanguageSwitcher.astro';
+
+interface Props {
+  locale: Locale;
+  pathname: string;
+}
+
+const { locale, pathname } = Astro.props;
+const t = useTranslations(locale);
+---
+<header class="site-header">
+  <div class="container bar">
+    <div class="brand">
+      <a class="name" href={localizedPath(locale, '')}>{SITE.name}</a>
+      <span class="tagline">{t('site.tagline')}</span>
+    </div>
+    <div class="top-right">
+      <Nav locale={locale} pathname={pathname} />
+      <LanguageSwitcher locale={locale} pathname={pathname} />
+    </div>
+  </div>
+</header>

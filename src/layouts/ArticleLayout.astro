@@ -1,0 +1,42 @@
+---
+import type { Locale } from '../config/site';
+import { SITE } from '../config/site';
+import { localizedPath, useTranslations } from '../i18n/utils';
+import BaseLayout from './BaseLayout.astro';
+import Prose from '../components/Prose.astro';
+
+interface Props {
+  locale: Locale;
+  title: string;
+  dek: string;
+  date: Date;
+  description: string;
+  wide?: boolean;
+  hideDek?: boolean;
+}
+
+const { locale, title, dek, date, description, wide = false, hideDek = false } =
+  Astro.props;
+const t = useTranslations(locale);
+const formatted = new Intl.DateTimeFormat(locale, {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+}).format(date);
+---
+<BaseLayout locale={locale} title={`${title} — ${SITE.name}`} description={description} ogType="article">
+  <article class:list={['article', { wide }]}>
+    <h1>{title}</h1>
+    {!hideDek && <h3 class="dek">{dek}</h3>}
+    <p class="meta">
+      {t('meta.by')} {SITE.author} ·
+      <time datetime={date.toISOString()}>{formatted}</time>
+    </p>
+    <Prose>
+      <slot />
+    </Prose>
+    <p class="back">
+      <a href={localizedPath(locale, 'articles/')}>← {t('article.backToArticles')}</a>
+    </p>
+  </article>
+</BaseLayout>
