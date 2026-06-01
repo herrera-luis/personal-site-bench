@@ -1,0 +1,58 @@
+---
+import ArticleCard from '@/components/ArticleCard.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { getArticlesByLocale } from '@/lib/articles';
+import {
+  localeAlternates,
+  localePath,
+  locales,
+  translations,
+  type Locale,
+} from '@/lib/i18n';
+
+export function getStaticPaths() {
+  return locales.map((locale) => ({ params: { locale }, props: { locale } }));
+}
+
+const { locale } = Astro.props as { locale: Locale };
+const t = translations[locale];
+const articles = (await getArticlesByLocale(locale)).slice(0, 3);
+---
+
+<BaseLayout
+  locale={locale}
+  title={t.home.title}
+  description={t.home.description}
+  canonicalPath={localePath(locale, '/')}
+  alternates={localeAlternates('/')}
+>
+  <section class="hero">
+    <p class="eyebrow">{t.home.eyebrow}</p>
+    <h1>{t.home.heading}</h1>
+    <p class="lead">{t.home.intro}</p>
+    <div class="actions">
+      <a class="button" href={localePath(locale, '/articles/')}
+        >{t.home.primaryCta}</a
+      >
+      <a class="button secondary" href={localePath(locale, '/about/')}
+        >{t.home.secondaryCta}</a
+      >
+    </div>
+  </section>
+
+  <section aria-labelledby="latest-articles">
+    <h2 id="latest-articles">{t.latestArticles}</h2>
+    {
+      articles.length > 0 ? (
+        <div class="article-grid">
+          {articles.map((article) => (
+            <ArticleCard article={article} />
+          ))}
+        </div>
+      ) : (
+        <p>{t.noArticles}</p>
+      )
+    }
+    <p><a href={localePath(locale, '/articles/')}>{t.allArticles} →</a></p>
+  </section>
+</BaseLayout>

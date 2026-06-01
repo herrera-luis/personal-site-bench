@@ -1,0 +1,45 @@
+---
+import ArticleCard from '@/components/ArticleCard.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { getArticlesByLocale } from '@/lib/articles';
+import {
+  localeAlternates,
+  localePath,
+  locales,
+  translations,
+  type Locale,
+} from '@/lib/i18n';
+
+export function getStaticPaths() {
+  return locales.map((locale) => ({ params: { locale }, props: { locale } }));
+}
+
+const { locale } = Astro.props as { locale: Locale };
+const t = translations[locale];
+const articles = await getArticlesByLocale(locale);
+---
+
+<BaseLayout
+  locale={locale}
+  title={t.articles.title}
+  description={t.articles.description}
+  canonicalPath={localePath(locale, '/articles/')}
+  alternates={localeAlternates('/articles/')}
+>
+  <section class="panel">
+    <p class="eyebrow">{t.nav.articles}</p>
+    <h1>{t.articles.heading}</h1>
+    <p class="lead">{t.articles.intro}</p>
+  </section>
+  {
+    articles.length > 0 ? (
+      <div class="article-grid">
+        {articles.map((article) => (
+          <ArticleCard article={article} />
+        ))}
+      </div>
+    ) : (
+      <p>{t.noArticles}</p>
+    )
+  }
+</BaseLayout>

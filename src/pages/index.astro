@@ -1,0 +1,18 @@
+---
+import { localePath, defaultLocale } from '@/lib/i18n';
+
+const destination = localePath(defaultLocale, '/');
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="refresh" content={`0; url=${destination}`} />
+    <link rel="canonical" href={destination} />
+    <title>Redirecting…</title>
+  </head>
+  <body>
+    <p>Redirecting to <a href={destination}>{destination}</a>.</p>
+  </body>
+</html>

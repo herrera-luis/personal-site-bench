@@ -1,0 +1,20 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { defaultLocale, localePath, translations } from '@/lib/i18n';
+
+const t = translations[defaultLocale];
+---
+
+<BaseLayout
+  locale={defaultLocale}
+  title={t.notFound.title}
+  description={t.notFound.description}
+  canonicalPath="/404/"
+  alternates={{ en: '/404/' }}
+>
+  <section class="panel">
+    <h1>{t.notFound.heading}</h1>
+    <p class="lead">{t.notFound.body}</p>
+    <a class="button" href={localePath(defaultLocale, '/')}>{t.notFound.cta}</a>
+  </section>
+</BaseLayout>

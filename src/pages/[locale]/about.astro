@@ -1,0 +1,37 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import {
+  localeAlternates,
+  localePath,
+  locales,
+  translations,
+  type Locale,
+} from '@/lib/i18n';
+
+export function getStaticPaths() {
+  return locales.map((locale) => ({ params: { locale }, props: { locale } }));
+}
+
+const { locale } = Astro.props as { locale: Locale };
+const t = translations[locale];
+---
+
+<BaseLayout
+  locale={locale}
+  title={t.about.title}
+  description={t.about.description}
+  canonicalPath={localePath(locale, '/about/')}
+  alternates={localeAlternates('/about/')}
+>
+  <article class="panel">
+    <p class="eyebrow">{t.nav.about}</p>
+    <h1>{t.about.heading}</h1>
+    <p class="lead">{t.about.body}</p>
+    <p>{t.about.details}</p>
+    <h2>{t.about.linksHeading}</h2>
+    <ul class="social-links">
+      <li><a href="https://github.com/herrera-luis" rel="me">GitHub</a></li>
+      <li><a href="mailto:hello@example.com">Email</a></li>
+    </ul>
+  </article>
+</BaseLayout>
