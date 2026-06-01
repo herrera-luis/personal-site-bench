@@ -1,0 +1,20 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { dictionary } from "../../i18n/dictionary";
+import { locales, parseLocale } from "../../i18n/routes";
+
+export function getStaticPaths() {
+  return locales.map((locale) => ({ params: { locale } }));
+}
+
+const locale = parseLocale(Astro.params.locale);
+const labels = dictionary[locale];
+---
+
+<BaseLayout locale={locale} route="about" title={labels.about.title} description={labels.about.bio}>
+  <section class="page-heading">
+    <h1>{labels.about.heading}</h1>
+    <p class="lede">{labels.about.bio}</p>
+    <p><a href="https://example.com/profile">{labels.about.profileLink}</a></p>
+  </section>
+</BaseLayout>

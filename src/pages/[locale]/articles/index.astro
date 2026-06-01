@@ -1,0 +1,23 @@
+---
+import ArticleList from "../../../components/ArticleList.astro";
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import { dictionary } from "../../../i18n/dictionary";
+import { locales, parseLocale } from "../../../i18n/routes";
+import { getArticlesByLocale } from "../../../lib/articles";
+
+export function getStaticPaths() {
+  return locales.map((locale) => ({ params: { locale } }));
+}
+
+const locale = parseLocale(Astro.params.locale);
+const labels = dictionary[locale];
+const articles = await getArticlesByLocale(locale);
+---
+
+<BaseLayout locale={locale} route="articles" title={labels.articles.title} description={labels.articles.intro}>
+  <section class="page-heading">
+    <h1>{labels.articles.title}</h1>
+    <p class="lede">{labels.articles.intro}</p>
+  </section>
+  <ArticleList articles={articles} locale={locale} />
+</BaseLayout>

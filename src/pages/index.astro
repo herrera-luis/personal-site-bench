@@ -1,0 +1,18 @@
+---
+import { localizedPath } from "../i18n/routes";
+
+const target = localizedPath("en", "home");
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="refresh" content={`0; url=${target}`} />
+    <link rel="canonical" href={target} />
+    <title>Redirecting to Personal Site</title>
+  </head>
+  <body>
+    <p><a href={target}>Continue to Personal Site</a></p>
+  </body>
+</html>

@@ -1,0 +1,31 @@
+---
+import { render } from "astro:content";
+import ArticleLayout from "../../../layouts/ArticleLayout.astro";
+import { parseLocale } from "../../../i18n/routes";
+import { getAllArticles, getArticle, getAvailableArticleLocales } from "../../../lib/articles";
+
+export async function getStaticPaths() {
+  const articles = await getAllArticles();
+  return articles.map((article) => ({ params: { locale: article.locale, slug: article.slug } }));
+}
+
+const locale = parseLocale(Astro.params.locale);
+const slug = Astro.params.slug;
+
+if (!slug) {
+  throw new Error("Missing article slug.");
+}
+
+const article = await getArticle(locale, slug);
+
+if (!article) {
+  return Astro.redirect(`/${locale}/articles/`);
+}
+
+const availableLocales = await getAvailableArticleLocales(slug);
+const { Content } = await render(article.entry);
+---
+
+<ArticleLayout article={article} availableLocales={availableLocales}>
+  <Content />
+</ArticleLayout>

@@ -1,0 +1,28 @@
+---
+import ArticleList from "../../components/ArticleList.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { dictionary } from "../../i18n/dictionary";
+import { locales, parseLocale } from "../../i18n/routes";
+import { getArticlesByLocale } from "../../lib/articles";
+import { siteConfig } from "../../site.config";
+
+export function getStaticPaths() {
+  return locales.map((locale) => ({ params: { locale } }));
+}
+
+const locale = parseLocale(Astro.params.locale);
+const labels = dictionary[locale];
+const articles = await getArticlesByLocale(locale);
+---
+
+<BaseLayout locale={locale} route="home" title={labels.home.title} description={siteConfig.descriptions[locale]}>
+  <section class="hero">
+    <p class="eyebrow">[{labels.rolesTagline}]</p>
+    <h1>{labels.home.heading}</h1>
+    <p class="lede">{labels.home.intro}</p>
+  </section>
+  <section aria-labelledby="latest-heading">
+    <h2 id="latest-heading">{labels.home.latest}</h2>
+    <ArticleList articles={articles} locale={locale} />
+  </section>
+</BaseLayout>
