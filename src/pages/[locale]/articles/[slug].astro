@@ -1,0 +1,56 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { dictionary } from '../../../i18n';
+import {
+  formatArticleDate,
+  getArticleDescription,
+  getArticleStaticPaths,
+  type Article,
+} from '../../../lib/articles';
+
+export function getStaticPaths() {
+  return getArticleStaticPaths();
+}
+
+interface Props {
+  article: Article;
+}
+
+const { article } = Astro.props;
+const locale = article.locale;
+const t = dictionary[locale];
+const ArticleContent = article.Content;
+const description = getArticleDescription(article);
+const articleLayout = article.frontmatter.layout ?? 'standard';
+const articleAccent = article.frontmatter.accent ?? 'plain';
+---
+
+<BaseLayout
+  locale={locale}
+  title={article.title}
+  description={description}
+  ogType="article"
+>
+  <article class="article-shell" data-article-layout={articleLayout} data-article-accent={articleAccent}>
+    <header class="article-header">
+      <h1>{article.title}</h1>
+      <h3>{article.dek}</h3>
+      <p class="reading-meta">
+        {t.article.published}
+        <time datetime={article.dateIso}>{formatArticleDate(locale, article.date)}</time>
+        {' · '}{t.article.byline}
+        {
+          article.updatedIso && (
+            <>
+              {' · '}{t.article.updated}
+              <time datetime={article.updatedIso}>{formatArticleDate(locale, new Date(article.updatedIso))}</time>
+            </>
+          )
+        }
+      </p>
+    </header>
+    <div class="prose">
+      <ArticleContent />
+    </div>
+  </article>
+</BaseLayout>

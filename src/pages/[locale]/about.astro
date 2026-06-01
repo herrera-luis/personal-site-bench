@@ -1,0 +1,19 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { dictionary, getLocale, locales, siteConfig } from '../../i18n';
+
+export function getStaticPaths() {
+  return locales.map((locale) => ({ params: { locale } }));
+}
+
+const locale = getLocale(Astro.params.locale);
+const t = dictionary[locale];
+---
+
+<BaseLayout locale={locale} title={t.pages.about.title} description={t.pages.about.description}>
+  <section class="about-page" aria-labelledby="about-title">
+    <h1 id="about-title">{t.pages.about.heading}</h1>
+    <p>{t.pages.about.bio}</p>
+    <p><a href={siteConfig.profileUrl}>{t.pages.about.profileLink}</a></p>
+  </section>
+</BaseLayout>

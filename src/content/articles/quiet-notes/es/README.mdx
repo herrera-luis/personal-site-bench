@@ -1,0 +1,38 @@
+---
+title: Notas tranquilas para un sitio pequeno
+dek: Un ensayo de muestra que demuestra como un articulo bilingue puede usar recursos locales y componentes compartidos.
+description: Un articulo de muestra completo para la version en espanol de Personal Site.
+date: 2026-05-31
+layout: wide
+accent: note
+---
+
+import AsideBox from '../../../../components/AsideBox.astro';
+import AssetFigure from '../../../../components/AssetFigure.astro';
+import PullQuote from '../../../../components/PullQuote.astro';
+import ReadingRule from '../../../../components/ReadingRule.astro';
+import fieldNotes from '../field-notes.svg';
+
+El sitio personal mas util empieza con una promesa sencilla: la escritura va primero. La navegacion debe ser obvia, la pagina debe seguir siendo legible sin JavaScript y cada decision visual debe ayudar a sostener la lectura.
+
+<AsideBox title="Control del articulo">
+  Este articulo declara `layout: wide` y `accent: note` en el frontmatter. La plantilla de lectura usa esos controles sin necesitar otra ruta ni otro archivo de layout.
+</AsideBox>
+
+## Un sitio que puede quedarse quieto
+
+Las paginas estaticas funcionan bien para ensayos porque hacen que la experiencia base sea durable. Una persona puede abrir la pagina, imprimirla, guardarla o usar un navegador de texto sin pasar primero por una aplicacion del lado del cliente.
+
+<AssetFigure src={fieldNotes.src} alt="Ilustracion abstracta de notas de campo" caption="Los recursos colocados junto al articulo viven al lado del texto que los usa." />
+
+## Bilingue por defecto
+
+Un sitio bilingue debe hacer que cada idioma se sienta nativo, no secundario. La URL contiene el idioma, la navegacion usa etiquetas traducidas y cada pagina senala su contraparte a buscadores y lectores.
+
+<PullQuote>
+  Un selector de idioma es mas util cuando conserva el lugar de lectura.
+</PullQuote>
+
+<ReadingRule />
+
+El modelo de una carpeta por articulo mantiene simple la publicacion: crea una carpeta para el slug, agrega un README por idioma y guarda cerca cualquier imagen o archivo de apoyo. Es suficiente estructura para un archivo pequeno sin convertir la escritura en administracion.

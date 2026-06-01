@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 420" role="img" aria-labelledby="title desc">
+  <title id="title">Abstract field notes illustration</title>
+  <desc id="desc">A restrained line drawing of paper, margins, and a small sun.</desc>
+  <rect width="960" height="420" fill="#f1eee7" />
+  <circle cx="760" cy="112" r="44" fill="#d5b89d" />
+  <rect x="128" y="86" width="472" height="250" rx="18" fill="#fbfaf7" stroke="#5f4634" stroke-width="6" />
+  <path d="M190 154h300M190 204h254M190 254h312" fill="none" stroke="#5f4634" stroke-width="10" stroke-linecap="round" />
+  <path d="M642 288c58-76 116-76 174 0" fill="none" stroke="#5f4634" stroke-width="9" stroke-linecap="round" />
+</svg>

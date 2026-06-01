@@ -1,0 +1,38 @@
+---
+title: Quiet Notes for a Small Website
+dek: A sample essay showing how a bilingual long-form article can use local assets and shared components.
+description: A complete sample article for the English version of Personal Site.
+date: 2026-05-31
+layout: wide
+accent: note
+---
+
+import AsideBox from '../../../../components/AsideBox.astro';
+import AssetFigure from '../../../../components/AssetFigure.astro';
+import PullQuote from '../../../../components/PullQuote.astro';
+import ReadingRule from '../../../../components/ReadingRule.astro';
+import fieldNotes from '../field-notes.svg';
+
+The smallest useful personal site starts with a promise: the writing comes first. Navigation should be obvious, the page should remain readable without JavaScript, and every decorative choice should make the words easier to stay with.
+
+<AsideBox title="Article control">
+  This article sets `layout: wide` and `accent: note` in frontmatter. The page template uses those controls without requiring a different route or layout file.
+</AsideBox>
+
+## A site that can stay still
+
+Static pages are a good fit for essays because they make the default experience durable. A reader can open the page, print it, save it, or use a text browser without negotiating a client-side app first.
+
+<AssetFigure src={fieldNotes.src} alt="Abstract field notes illustration" caption="Colocated assets live beside the article that uses them." />
+
+## Bilingual by default
+
+A bilingual site should make each language feel native rather than secondary. The URL carries the locale, the navigation uses translated labels, and each page points search engines and readers to its counterpart.
+
+<PullQuote>
+  A language switcher is most useful when it preserves the reader's place.
+</PullQuote>
+
+<ReadingRule />
+
+The folder-per-article model keeps publishing simple: create one slug folder, add one README per locale, and keep any images or supporting files nearby. That is enough structure for a small archive without turning writing into bookkeeping.

@@ -1,0 +1,46 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { dictionary, getLocale, locales } from '../../i18n';
+import { formatArticleDate, getArticles } from '../../lib/articles';
+
+export function getStaticPaths() {
+  return locales.map((locale) => ({ params: { locale } }));
+}
+
+const locale = getLocale(Astro.params.locale);
+const t = dictionary[locale];
+const articles = getArticles(locale);
+---
+
+<BaseLayout locale={locale} title={t.pages.home.title} description={t.site.description}>
+  <section class="home-hero" aria-labelledby="home-title">
+    <h1 id="home-title">{t.site.name}</h1>
+    <div class="identity-strip">{t.site.roles}</div>
+    <p class="home-intro">{t.pages.home.intro}</p>
+  </section>
+
+  <section id="articles" aria-labelledby="articles-heading">
+    <h2 id="articles-heading">{t.pages.home.articlesHeading}</h2>
+    {
+      articles.length > 0 ? (
+        <ol class="article-list">
+          {articles.map((article) => (
+            <li class="article-card">
+              <article>
+                <h3>{article.title}</h3>
+                <p>{article.dek}</p>
+                <div class="article-meta">
+                  <time datetime={article.dateIso}>{formatArticleDate(locale, article.date)}</time>
+                  {' · '}
+                  <a href={`/${locale}/articles/${article.slug}/`}>{t.article.fullArticle}</a>
+                </div>
+              </article>
+            </li>
+          ))}
+        </ol>
+      ) : (
+        <p>{t.article.empty}</p>
+      )
+    }
+  </section>
+</BaseLayout>
