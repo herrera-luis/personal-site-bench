@@ -1,0 +1,45 @@
+---
+import { buildSeo, type SeoProps } from '@/lib/seo';
+
+const seo = buildSeo(Astro.props as SeoProps);
+const { locale } = Astro.props as SeoProps;
+---
+
+<title>{seo.title}</title>
+<meta name="description" content={seo.description} />
+<link rel="canonical" href={seo.canonicalUrl} />
+{
+  seo.alternateLinks.map((alternate) => (
+    <link rel="alternate" hreflang={alternate.locale} href={alternate.href} />
+  ))
+}
+{
+  seo.alternateLinks.length > 0 && (
+    <link
+      rel="alternate"
+      hreflang="x-default"
+      href={seo.alternateLinks[0].href}
+    />
+  )
+}
+<meta property="og:title" content={seo.openGraph.title} />
+<meta property="og:description" content={seo.openGraph.description} />
+<meta property="og:type" content={seo.openGraph.type} />
+<meta property="og:url" content={seo.openGraph.url} />
+<meta property="og:locale" content={locale === 'es' ? 'es_ES' : 'en_US'} />
+{
+  seo.openGraph.image && (
+    <meta property="og:image" content={seo.openGraph.image} />
+  )
+}
+<meta
+  name="twitter:card"
+  content={seo.openGraph.image ? 'summary_large_image' : 'summary'}
+/>
+<meta name="twitter:title" content={seo.openGraph.title} />
+<meta name="twitter:description" content={seo.openGraph.description} />
+{
+  seo.openGraph.image && (
+    <meta name="twitter:image" content={seo.openGraph.image} />
+  )
+}

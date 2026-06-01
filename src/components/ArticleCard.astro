@@ -1,0 +1,23 @@
+---
+import type { ArticleSummary } from '@/lib/articles';
+import { translations } from '@/lib/i18n';
+
+interface Props {
+  article: ArticleSummary;
+}
+
+const { article } = Astro.props;
+const t = translations[article.locale];
+const formattedDate = new Intl.DateTimeFormat(article.locale, {
+  dateStyle: 'medium',
+}).format(article.pubDate);
+---
+
+<article class="article-card">
+  <p class="muted">
+    <time datetime={article.pubDate.toISOString()}>{formattedDate}</time>
+  </p>
+  <h3><a href={article.href}>{article.title}</a></h3>
+  <p>{article.description}</p>
+  <a class="read-more" href={article.href}>{t.readMore} →</a>
+</article>

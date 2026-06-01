@@ -1,0 +1,330 @@
+---
+import LanguageSwitcher from '@/components/LanguageSwitcher.astro';
+import Seo from '@/components/Seo.astro';
+import { localePath, siteAuthor, translations, type Locale } from '@/lib/i18n';
+
+interface Props {
+  locale: Locale;
+  title: string;
+  description: string;
+  canonicalPath: string;
+  alternates?: Partial<Record<Locale, string>>;
+  type?: 'website' | 'article';
+  image?: string;
+  fallbackPath?: string;
+}
+
+const {
+  locale,
+  title,
+  description,
+  canonicalPath,
+  alternates,
+  type,
+  image,
+  fallbackPath,
+} = Astro.props;
+const t = translations[locale];
+const navItems = [
+  { href: localePath(locale, '/'), label: t.nav.home },
+  { href: localePath(locale, '/about/'), label: t.nav.about },
+  { href: localePath(locale, '/articles/'), label: t.nav.articles },
+];
+---
+
+<!doctype html>
+<html lang={locale}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content={Astro.generator} />
+    <Seo
+      title={title}
+      description={description}
+      locale={locale}
+      canonicalPath={canonicalPath}
+      alternates={alternates}
+      type={type}
+      image={image}
+    />
+  </head>
+  <body>
+    <a class="skip-link" href="#content">{t.skipToContent}</a>
+    <header class="site-header">
+      <a class="brand" href={localePath(locale, '/')}>{siteAuthor}</a>
+      <nav aria-label="Primary navigation">
+        <ul>
+          {
+            navItems.map((item) => (
+              <li>
+                <a href={item.href}>{item.label}</a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+      <LanguageSwitcher
+        currentLocale={locale}
+        alternates={alternates}
+        fallbackPath={fallbackPath}
+      />
+    </header>
+    <main id="content">
+      <slot />
+    </main>
+    <footer class="site-footer">
+      <p>&copy; {new Date().getFullYear()} {siteAuthor}. {t.footer}</p>
+      <p><a href={localePath(locale, '/rss.xml')}>RSS</a></p>
+    </footer>
+  </body>
+</html>
+
+<style is:global>
+  :root {
+    color-scheme: light dark;
+    --bg: #f8f5ef;
+    --surface: #fffaf1;
+    --text: #1f2933;
+    --muted: #52606d;
+    --accent: #9f4f1b;
+    --accent-strong: #78350f;
+    --border: #e6dccb;
+    font-family:
+      Inter,
+      ui-sans-serif,
+      system-ui,
+      -apple-system,
+      BlinkMacSystemFont,
+      'Segoe UI',
+      sans-serif;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #111827;
+      --surface: #1f2937;
+      --text: #f9fafb;
+      --muted: #cbd5e1;
+      --accent: #fbbf24;
+      --accent-strong: #fde68a;
+      --border: #374151;
+    }
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background:
+      radial-gradient(
+        circle at top left,
+        color-mix(in srgb, var(--accent) 18%, transparent),
+        transparent 32rem
+      ),
+      var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  a {
+    color: var(--accent-strong);
+  }
+
+  .skip-link {
+    position: absolute;
+    left: 1rem;
+    top: 0.5rem;
+    transform: translateY(-200%);
+    background: var(--surface);
+    border: 2px solid var(--accent);
+    border-radius: 999px;
+    padding: 0.5rem 0.75rem;
+    z-index: 10;
+  }
+
+  .skip-link:focus {
+    transform: translateY(0);
+  }
+
+  .site-header,
+  .site-footer,
+  main {
+    width: min(100% - 2rem, 68rem);
+    margin-inline: auto;
+  }
+
+  .site-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-block: 1rem;
+  }
+
+  .brand {
+    color: var(--text);
+    font-weight: 800;
+    text-decoration: none;
+  }
+
+  nav ul,
+  .language-switcher ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  nav a,
+  .language-switcher a,
+  .button {
+    border-radius: 999px;
+    padding: 0.45rem 0.7rem;
+    text-decoration: none;
+  }
+
+  nav a:hover,
+  nav a:focus-visible,
+  .language-switcher a:hover,
+  .language-switcher a:focus-visible,
+  .button:hover,
+  .button:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  .language-switcher a[aria-current='true'] {
+    background: var(--accent);
+    color: #111827;
+  }
+
+  main {
+    padding-block: clamp(2rem, 4vw, 5rem);
+  }
+
+  .hero,
+  .panel,
+  .article-card,
+  .article-body {
+    background: color-mix(in srgb, var(--surface) 92%, transparent);
+    border: 1px solid var(--border);
+    border-radius: 1.5rem;
+    box-shadow: 0 16px 48px rgb(15 23 42 / 0.08);
+    padding: clamp(1.25rem, 4vw, 3rem);
+  }
+
+  .eyebrow {
+    color: var(--accent-strong);
+    font-size: 0.85rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  h1,
+  h2,
+  h3 {
+    line-height: 1.15;
+  }
+
+  h1 {
+    font-size: clamp(2.3rem, 8vw, 5rem);
+    margin: 0.25rem 0 1rem;
+  }
+
+  h2 {
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
+  }
+
+  .lead {
+    color: var(--muted);
+    font-size: clamp(1.1rem, 2vw, 1.35rem);
+    max-width: 45rem;
+  }
+
+  .actions,
+  .article-grid,
+  .meta-list,
+  .social-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .article-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+    margin-top: 1.5rem;
+  }
+
+  .article-card h3 {
+    margin-top: 0;
+  }
+
+  .article-card a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .article-card a:hover,
+  .article-card a:focus-visible {
+    color: var(--accent-strong);
+    text-decoration: underline;
+  }
+
+  .muted,
+  time {
+    color: var(--muted);
+  }
+
+  .button {
+    background: var(--accent);
+    color: #111827;
+    display: inline-flex;
+    font-weight: 800;
+  }
+
+  .button.secondary {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--accent-strong);
+  }
+
+  .article-body :where(p, ul, ol, blockquote) {
+    max-width: 44rem;
+  }
+
+  .site-footer {
+    border-top: 1px solid var(--border);
+    color: var(--muted);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-block: 2rem;
+  }
+
+  .sr-only {
+    border: 0;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    white-space: nowrap;
+    width: 1px;
+  }
+
+  @media (max-width: 48rem) {
+    .site-header {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+  }
+</style>

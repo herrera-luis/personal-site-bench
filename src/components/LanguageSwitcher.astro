@@ -1,0 +1,53 @@
+---
+import {
+  localeNames,
+  locales,
+  localePath,
+  otherLocale,
+  translations,
+  type Locale,
+} from '@/lib/i18n';
+
+interface Props {
+  currentLocale: Locale;
+  alternates?: Partial<Record<Locale, string>>;
+  fallbackPath?: string;
+}
+
+const {
+  currentLocale,
+  alternates = {},
+  fallbackPath = '/articles/',
+} = Astro.props;
+const t = translations[currentLocale];
+---
+
+<nav class="language-switcher" aria-label={t.languageSwitcherLabel}>
+  <ul>
+    {
+      locales.map((locale) => {
+        const href =
+          alternates[locale] ??
+          localePath(
+            locale,
+            locale === otherLocale(currentLocale) ? fallbackPath : '/',
+          );
+        const isCurrent = locale === currentLocale;
+        return (
+          <li>
+            <a
+              href={href}
+              aria-current={isCurrent ? 'true' : undefined}
+              lang={locale}
+            >
+              <span class="sr-only">
+                {isCurrent ? `${t.currentLanguage}: ` : ''}
+              </span>
+              {localeNames[locale]}
+            </a>
+          </li>
+        );
+      })
+    }
+  </ul>
+</nav>
