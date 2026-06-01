@@ -1,0 +1,42 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { site } from '../../data/site';
+import { getArticlesByLocale } from '../../content/articles';
+import { locales, t, type Locale } from '../../i18n/dictionary';
+import { formatDate, localizedPath } from '../../i18n/routes';
+
+export function getStaticPaths() {
+  return locales.map((locale) => ({ params: { locale } }));
+}
+
+const locale = Astro.params.locale as Locale;
+const copy = t(locale);
+const articles = await getArticlesByLocale(locale);
+---
+<BaseLayout locale={locale} route={{ kind: 'home' }} title={copy.home.seoTitle} description={copy.home.seoDescription}>
+  <section class="hero" aria-labelledby="home-title">
+    <p class="eyebrow">{copy.home.introEyebrow}</p>
+    <h1 id="home-title">{site.name}</h1>
+    <p>{copy.site.roleTagline}</p>
+  </section>
+
+  <section id="articles" class="articles-section" aria-labelledby="articles-title">
+    <h2 id="articles-title">{copy.home.articlesHeading}</h2>
+    {articles.length > 0 ? (
+      <ol class="article-list">
+        {articles.map((article) => (
+          <li class="article-card">
+            <article>
+              <p class="article-meta"><time datetime={article.entry.data.pubDate.toISOString()}>{formatDate(article.entry.data.pubDate, locale)}</time></p>
+              <h3><a href={localizedPath(locale, { kind: 'article', slug: article.slug })}>{article.entry.data.title}</a></h3>
+              <p>{article.entry.data.dek}</p>
+              <a href={localizedPath(locale, { kind: 'article', slug: article.slug })}>{copy.home.fullArticle}</a>
+            </article>
+          </li>
+        ))}
+      </ol>
+    ) : (
+      <p>{copy.home.emptyArticles}</p>
+    )}
+  </section>
+</BaseLayout>

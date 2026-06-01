@@ -1,0 +1,25 @@
+---
+title: "A quiet sample article"
+dek: "A complete English article exercising the long-form template."
+description: "A placeholder English article that demonstrates metadata, prose, and shared MDX components."
+pubDate: 2026-01-15
+updatedDate: 2026-01-20
+layoutVariant: wide
+showTableOfContents: true
+---
+
+import ArticleCallout from '../../../../components/ArticleCallout.astro';
+
+## Field notes
+
+This sample article is intentionally small, but it uses the same folder-per-article structure expected for future writing. The English and Spanish files live together under one slug folder, so adding another article means creating one new folder with localized README files and any colocated assets.
+
+<ArticleCallout title="Template exercise">
+  This callout is imported from a shared Astro component inside MDX, demonstrating that an article can vary its structure when the writing needs it.
+</ArticleCallout>
+
+The page remains readable as plain static HTML. Navigation, language switching, metadata, and feed links are rendered at build time without requiring client-side JavaScript.
+
+## A restrained closing
+
+The visual system favors quiet type, ample line length, and the reader's color-scheme preference. Future articles can keep the standard layout or choose a wider variant through frontmatter.

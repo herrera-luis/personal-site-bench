@@ -1,0 +1,33 @@
+---
+import ArticleLayout from '../../../layouts/ArticleLayout.astro';
+import { getArticles } from '../../../content/articles';
+
+export async function getStaticPaths() {
+  const articles = await getArticles();
+  return articles.map((article) => ({
+    params: { locale: article.locale, slug: article.slug },
+    props: { article },
+  }));
+}
+
+const { article } = Astro.props;
+const { Content } = await article.entry.render();
+---
+<ArticleLayout
+  locale={article.locale}
+  slug={article.slug}
+  title={article.entry.data.title}
+  dek={article.entry.data.dek}
+  description={article.entry.data.description}
+  pubDate={article.entry.data.pubDate}
+  updatedDate={article.entry.data.updatedDate}
+  layoutVariant={article.entry.data.layoutVariant}
+>
+  {article.entry.data.showTableOfContents && (
+    <nav aria-label="Article table of contents" class="article-callout">
+      <strong>Contents</strong>
+      <a href="#field-notes">Field notes</a>
+    </nav>
+  )}
+  <Content />
+</ArticleLayout>
