@@ -27,7 +27,7 @@ const dateFormatter = new Intl.DateTimeFormat(article.locale, { dateStyle: "long
       {article.eyebrow && <p class="eyebrow">{article.eyebrow}</p>}
       <h1>{article.title}</h1>
       <h3>{article.dek}</h3>
-      <p class="meta">{labels.meta.published} {dateFormatter.format(article.date)} · {labels.meta.byline}</p>
+      <p class="meta">{labels.meta.published} {dateFormatter.format(article.date)} &middot; {labels.meta.byline}</p>
     </header>
     {article.showToc && <aside class="toc-note" aria-label={labels.article.toc}>{labels.article.toc}</aside>}
     <slot />
