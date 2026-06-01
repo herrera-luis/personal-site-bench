@@ -1,0 +1,17 @@
+---
+import { t, type Locale } from '../i18n/dictionary';
+import { formatDate } from '../i18n/routes';
+
+interface Props {
+  locale: Locale;
+  pubDate: Date;
+  updatedDate?: Date;
+}
+
+const { locale, pubDate, updatedDate } = Astro.props;
+const copy = t(locale);
+---
+<p class="article-meta">
+  <span>{copy.article.published}: <time datetime={pubDate.toISOString()}>{formatDate(pubDate, locale)}</time></span>
+  {updatedDate && <span>{copy.article.updated}: <time datetime={updatedDate.toISOString()}>{formatDate(updatedDate, locale)}</time></span>}
+</p>

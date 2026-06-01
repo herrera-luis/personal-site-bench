@@ -1,0 +1,68 @@
+---
+import '../styles/global.css';
+import LanguageSwitcher from '../components/LanguageSwitcher.astro';
+import Nav from '../components/Nav.astro';
+import { site } from '../data/site';
+import { t, type Locale } from '../i18n/dictionary';
+import { alternates, canonicalUrl, rssPath, type RouteDescriptor } from '../i18n/routes';
+
+interface Props {
+  locale: Locale;
+  route: RouteDescriptor;
+  title: string;
+  description: string;
+  ogType?: 'website' | 'article';
+}
+
+const { locale, route, title, description, ogType = 'website' } = Astro.props;
+const copy = t(locale);
+const pageUrl = canonicalUrl(locale, route);
+const alternateLinks = alternates(route);
+---
+<!doctype html>
+<html lang={locale}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={pageUrl} />
+    {alternateLinks.map((alternate) => (
+      <link rel="alternate" hreflang={alternate.locale} href={alternate.href} />
+    ))}
+    <link rel="alternate" type="application/rss+xml" title={copy.rss.title} href={rssPath(locale)} />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:url" content={pageUrl} />
+    <meta property="og:locale" content={locale === 'en' ? 'en_US' : 'es_ES'} />
+  </head>
+  <body>
+    <div class="site-wrapper">
+      <header class="site-header">
+        <div class="brand">
+          <a href={`/${locale}/`}>{site.name}</a>
+          <span class="tagline">{copy.site.roleTagline}</span>
+        </div>
+        <div class="header-actions">
+          <Nav locale={locale} />
+          <LanguageSwitcher locale={locale} route={route} />
+        </div>
+      </header>
+      <main>
+        <slot />
+      </main>
+      <footer class="site-footer">
+        <div class="footer-links" aria-label="Footer links">
+          {site.social.map((link) => (
+            <a href={link.href} rel="me noopener noreferrer">{link.label}</a>
+          ))}
+          <a href={rssPath(locale)}>{copy.footer.rss}</a>
+        </div>
+        <p class="footer-copy">© {new Date().getUTCFullYear()} {site.name}. {copy.site.copyright}</p>
+      </footer>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,22 @@
+---
+import { locales, t, type Locale } from '../i18n/dictionary';
+import { localizedPath, type RouteDescriptor } from '../i18n/routes';
+
+interface Props {
+  locale: Locale;
+  route: RouteDescriptor;
+}
+
+const { locale, route } = Astro.props;
+---
+<nav class="language-switcher" aria-label="Language switcher">
+  {locales.map((targetLocale) => (
+    <a
+      href={localizedPath(targetLocale, route)}
+      lang={targetLocale}
+      aria-current={targetLocale === locale ? 'true' : undefined}
+    >
+      {t(targetLocale).localeName}
+    </a>
+  ))}
+</nav>

@@ -1,0 +1,37 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import ArticleMeta from '../components/ArticleMeta.astro';
+import type { Locale } from '../i18n/dictionary';
+
+interface Props {
+  locale: Locale;
+  slug: string;
+  title: string;
+  dek: string;
+  description: string;
+  pubDate: Date;
+  updatedDate?: Date;
+  layoutVariant?: 'standard' | 'wide';
+}
+
+const { locale, slug, title, dek, description, pubDate, updatedDate, layoutVariant = 'standard' } = Astro.props;
+---
+<BaseLayout
+  locale={locale}
+  route={{ kind: 'article', slug }}
+  title={`${title} — Personal Site`}
+  description={description}
+  ogType="article"
+>
+  <article class={layoutVariant === 'wide' ? 'article-wide' : undefined}>
+    <header class="article-header">
+      <p class="eyebrow">Personal Site</p>
+      <h1>{title}</h1>
+      <h3>{dek}</h3>
+      <ArticleMeta locale={locale} pubDate={pubDate} updatedDate={updatedDate} />
+    </header>
+    <div class="prose">
+      <slot />
+    </div>
+  </article>
+</BaseLayout>
