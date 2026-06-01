@@ -1,0 +1,25 @@
+---
+import { dictionary } from "../i18n/dictionary";
+import { locales, localizedPath, type Locale, type RouteKey } from "../i18n/routes";
+
+const { locale, route, slug, availableLocales = locales } = Astro.props as {
+  locale: Locale;
+  route: RouteKey;
+  slug?: string;
+  availableLocales?: readonly Locale[];
+};
+
+const labels: Record<Locale, string> = { en: "English", es: "Espanol" };
+---
+
+<nav class="language-switcher" aria-label={dictionary[locale].meta.switchLanguage}>
+  {locales.map((candidate) => availableLocales.includes(candidate) && (
+    <a
+      href={localizedPath(candidate, route, slug)}
+      lang={candidate}
+      aria-current={candidate === locale ? "page" : undefined}
+    >
+      {labels[candidate]}
+    </a>
+  ))}
+</nav>

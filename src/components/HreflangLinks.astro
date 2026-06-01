@@ -1,0 +1,9 @@
+---
+type Alternate = { locale: string; href: string };
+
+const { alternates } = Astro.props as { alternates: Alternate[] };
+---
+
+{alternates.map((alternate) => (
+  <link rel="alternate" hreflang={alternate.locale} href={alternate.href} />
+))}

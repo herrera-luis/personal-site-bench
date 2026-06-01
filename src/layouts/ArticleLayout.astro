@@ -1,0 +1,35 @@
+---
+import BaseLayout from "./BaseLayout.astro";
+import { dictionary } from "../i18n/dictionary";
+import type { Locale } from "../i18n/routes";
+import type { LocalizedArticle } from "../lib/articles";
+
+const { article, availableLocales } = Astro.props as {
+  article: LocalizedArticle;
+  availableLocales: Locale[];
+};
+
+const labels = dictionary[article.locale];
+const dateFormatter = new Intl.DateTimeFormat(article.locale, { dateStyle: "long" });
+---
+
+<BaseLayout
+  locale={article.locale}
+  route="article"
+  slug={article.slug}
+  title={article.title}
+  description={article.description}
+  ogType="article"
+  availableLocales={availableLocales}
+>
+  <article class={`article-prose ${article.layoutVariant === "wide" ? "wide" : ""}`}>
+    <header class="article-header">
+      {article.eyebrow && <p class="eyebrow">{article.eyebrow}</p>}
+      <h1>{article.title}</h1>
+      <h3>{article.dek}</h3>
+      <p class="meta">{labels.meta.published} {dateFormatter.format(article.date)} · {labels.meta.byline}</p>
+    </header>
+    {article.showToc && <aside class="toc-note" aria-label={labels.article.toc}>{labels.article.toc}</aside>}
+    <slot />
+  </article>
+</BaseLayout>

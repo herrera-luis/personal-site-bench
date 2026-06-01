@@ -1,0 +1,18 @@
+---
+import { dictionary } from "../i18n/dictionary";
+import { localizedPath, type Locale } from "../i18n/routes";
+import { siteConfig } from "../site.config";
+
+const { locale } = Astro.props as { locale: Locale };
+const labels = dictionary[locale];
+---
+
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div class="footer-links" aria-label={labels.footer.social}>
+      {siteConfig.socialLinks.map((link) => <a href={link.href}>{link.label}</a>)}
+      <a href={localizedPath(locale, "rss")}>{labels.footer.rss}</a>
+    </div>
+    <small>&copy; {new Date().getFullYear()} {labels.footer.copyright}</small>
+  </div>
+</footer>

@@ -1,0 +1,30 @@
+---
+import LanguageSwitcher from "./LanguageSwitcher.astro";
+import { dictionary } from "../i18n/dictionary";
+import { localizedPath, type Locale, type RouteKey } from "../i18n/routes";
+import { siteConfig } from "../site.config";
+
+const { locale, route, slug, availableLocales } = Astro.props as {
+  locale: Locale;
+  route: RouteKey;
+  slug?: string;
+  availableLocales?: readonly Locale[];
+};
+
+const labels = dictionary[locale];
+---
+
+<header class="site-header">
+  <div class="site-header__inner">
+    <div class="brand">
+      <a class="brand__name" href={localizedPath(locale, "home")}>{siteConfig.siteName}</a>
+      <span class="brand__tagline">[{labels.rolesTagline}]</span>
+    </div>
+    <nav class="nav" aria-label="Primary">
+      <a href={localizedPath(locale, "home")} aria-current={route === "home" ? "page" : undefined}>{labels.nav.home}</a>
+      <a href={localizedPath(locale, "articles")} aria-current={route === "articles" ? "page" : undefined}>{labels.nav.articles}</a>
+      <a href={localizedPath(locale, "about")} aria-current={route === "about" ? "page" : undefined}>{labels.nav.about}</a>
+    </nav>
+    <LanguageSwitcher locale={locale} route={route} slug={slug} availableLocales={availableLocales} />
+  </div>
+</header>

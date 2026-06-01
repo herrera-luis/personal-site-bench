@@ -1,0 +1,26 @@
+---
+import { dictionary } from "../i18n/dictionary";
+import { localizedPath, type Locale } from "../i18n/routes";
+import type { LocalizedArticle } from "../lib/articles";
+
+const { articles, locale } = Astro.props as { articles: LocalizedArticle[]; locale: Locale };
+const labels = dictionary[locale];
+const dateFormatter = new Intl.DateTimeFormat(locale, { dateStyle: "medium" });
+---
+
+{articles.length === 0 ? (
+  <p class="empty-state">{labels.articles.empty}</p>
+) : (
+  <ul class="article-list">
+    {articles.map((article) => (
+      <li class="article-card">
+        <article>
+          <p class="meta">{dateFormatter.format(article.date)}</p>
+          <h3><a href={localizedPath(locale, "article", article.slug)}>{article.title}</a></h3>
+          <p>{article.dek}</p>
+          <a href={localizedPath(locale, "article", article.slug)}>{labels.articles.readMore}</a>
+        </article>
+      </li>
+    ))}
+  </ul>
+)}

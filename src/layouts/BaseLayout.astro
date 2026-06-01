@@ -1,0 +1,64 @@
+---
+import HreflangLinks from "../components/HreflangLinks.astro";
+import SiteFooter from "../components/SiteFooter.astro";
+import SiteHeader from "../components/SiteHeader.astro";
+import { canonicalUrl, hreflangAlternates, localizedPath, ogLocale, type Locale, type RouteKey } from "../i18n/routes";
+import { siteConfig } from "../site.config";
+import "../styles/global.css";
+
+const {
+  locale,
+  route,
+  slug,
+  title,
+  description,
+  ogType = "website",
+  availableLocales,
+  alternates = hreflangAlternates(route, slug, availableLocales),
+  canonicalPath = localizedPath(locale, route, slug)
+} = Astro.props as {
+  locale: Locale;
+  route: RouteKey;
+  slug?: string;
+  title: string;
+  description: string;
+  ogType?: "website" | "article";
+  availableLocales?: readonly Locale[];
+  alternates?: ReturnType<typeof hreflangAlternates>;
+  canonicalPath?: string;
+};
+
+const pageTitle = title === siteConfig.siteName ? title : `${title} | ${siteConfig.siteName}`;
+const canonical = canonicalUrl(canonicalPath);
+const alternateOgLocales = alternates
+  .filter((alternate) => alternate.locale !== locale && alternate.locale !== "x-default")
+  .map((alternate) => ogLocale(alternate.locale as Locale));
+---
+
+<!doctype html>
+<html lang={locale}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <HreflangLinks alternates={alternates} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content={ogLocale(locale)} />
+    {alternateOgLocales.map((alternate) => <meta property="og:locale:alternate" content={alternate} />)}
+  </head>
+  <body>
+    <div class="page-shell">
+      <SiteHeader locale={locale} route={route} slug={slug} availableLocales={availableLocales} />
+      <main id="content">
+        <slot />
+      </main>
+      <SiteFooter locale={locale} />
+    </div>
+  </body>
+</html>
