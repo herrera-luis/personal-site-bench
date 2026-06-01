@@ -8,7 +8,7 @@ export type ArticleFrontmatter = {
   date: string;
   updated?: string;
   draft?: boolean;
-  layout?: 'standard' | 'wide';
+  articleLayout?: 'standard' | 'wide';
   accent?: 'plain' | 'note';
 };
 

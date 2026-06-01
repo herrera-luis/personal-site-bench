@@ -21,7 +21,7 @@ const locale = article.locale;
 const t = dictionary[locale];
 const ArticleContent = article.Content;
 const description = getArticleDescription(article);
-const articleLayout = article.frontmatter.layout ?? 'standard';
+const articleLayout = article.frontmatter.articleLayout ?? 'standard';
 const articleAccent = article.frontmatter.accent ?? 'plain';
 ---
 
