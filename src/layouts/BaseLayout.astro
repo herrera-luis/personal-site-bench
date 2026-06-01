@@ -1,0 +1,105 @@
+---
+import '../styles/global.css';
+import {
+  absoluteUrl,
+  defaultLocale,
+  dictionary,
+  languageNames,
+  locales,
+  siteConfig,
+  switchLocalePath,
+  type Locale,
+} from '../i18n';
+
+interface Props {
+  locale: Locale;
+  title: string;
+  description: string;
+  pathname?: string;
+  ogType?: 'website' | 'article';
+}
+
+const {
+  locale,
+  title,
+  description,
+  pathname = Astro.url.pathname,
+  ogType = 'website',
+} = Astro.props;
+
+const t = dictionary[locale];
+const pageTitle = title === t.site.name ? title : `${title} | ${t.site.name}`;
+const canonicalPath = switchLocalePath(pathname, locale);
+const canonicalUrl = absoluteUrl(canonicalPath);
+const alternateLinks = locales.map((alternateLocale) => ({
+  locale: alternateLocale,
+  href: absoluteUrl(switchLocalePath(pathname, alternateLocale)),
+  label: languageNames[alternateLocale],
+}));
+const xDefaultHref = absoluteUrl(switchLocalePath(pathname, defaultLocale));
+const rssHref = absoluteUrl(`/${locale}/rss.xml`);
+
+const navItems = [
+  { label: t.nav.home, href: `/${locale}/` },
+  { label: t.nav.articles, href: `/${locale}/#articles` },
+  { label: t.nav.about, href: `/${locale}/about/` },
+];
+---
+
+<!doctype html>
+<html lang={locale}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+    {alternateLinks.map((link) => <link rel="alternate" hreflang={link.locale} href={link.href} />)}
+    <link rel="alternate" hreflang="x-default" href={xDefaultHref} />
+    <link rel="alternate" type="application/rss+xml" title={t.rss.title} href={rssHref} />
+    <meta property="og:site_name" content={t.site.name} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:url" content={canonicalUrl} />
+  </head>
+  <body>
+    <a class="skip-link" href="#content">Skip to content</a>
+    <header class="site-header">
+      <a class="site-brand" href={`/${locale}/`} aria-label={t.nav.home}>
+        <strong>{t.site.name}</strong>
+        <span>{t.site.roles}</span>
+      </a>
+      <div class="header-actions">
+        <nav class="primary-nav" aria-label="Primary">
+          {navItems.map((item) => <a href={item.href}>{item.label}</a>)}
+        </nav>
+        <nav class="language-switcher" aria-label={t.languageSwitcher.label} data-language-switcher>
+          {
+            alternateLinks.map((link) => (
+              <a
+                href={new URL(link.href).pathname}
+                hreflang={link.locale}
+                lang={link.locale}
+                aria-current={link.locale === locale ? 'true' : undefined}
+                data-locale-link={link.locale}
+              >
+                {link.label}
+              </a>
+            ))
+          }
+        </nav>
+      </div>
+    </header>
+    <main id="content">
+      <slot />
+    </main>
+    <footer class="site-footer">
+      <div class="footer-links">
+        <a href={siteConfig.profileUrl}>{t.footer.profile}</a>
+        <a href={rssHref}>{t.footer.rss}</a>
+      </div>
+      <p>&copy; {new Date().getFullYear()} {siteConfig.author}. {t.footer.copyright}</p>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,19 @@
+---
+import { defaultLocale } from '../i18n';
+
+const destination = `/${defaultLocale}/`;
+---
+
+<!doctype html>
+<html lang={defaultLocale}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="robots" content="noindex" />
+    <meta http-equiv="refresh" content={`0; url=${destination}`} />
+    <link rel="canonical" href={destination} />
+    <title>Redirecting to Personal Site</title>
+  </head>
+  <body>
+    <p><a href={destination}>Continue to Personal Site</a></p>
+  </body>
+</html>
