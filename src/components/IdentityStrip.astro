@@ -1,0 +1,15 @@
+---
+import type { Locale } from '../config/site';
+import { SITE } from '../config/site';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const roles = SITE.roles[locale].join(', ');
+---
+<section class="identity">
+  <h1>{SITE.name}</h1>
+  <p class="roles">[{roles}]</p>
+</section>
