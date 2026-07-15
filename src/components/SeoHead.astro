@@ -1,0 +1,43 @@
+---
+import type { Locale } from '../config/site';
+import { SITE } from '../config/site';
+import { getAlternates } from '../i18n/utils';
+
+interface Props {
+  locale: Locale;
+  title: string;
+  description: string;
+  pathname: string;
+  ogType?: string;
+}
+
+const { locale, title, description, pathname, ogType = 'website' } = Astro.props;
+
+const fullTitle = title === SITE.name ? title : `${title} · ${SITE.name}`;
+const canonical = new URL(pathname, SITE.url).href;
+const alternates = getAlternates(pathname, SITE.url);
+const ogLocale = locale === 'es' ? 'es_ES' : 'en_US';
+---
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>{fullTitle}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonical} />
+
+{alternates.map((alt) => (
+  <link rel="alternate" hreflang={alt.hreflang} href={alt.href} />
+))}
+
+<meta property="og:type" content={ogType} />
+<meta property="og:title" content={fullTitle} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+<meta property="og:site_name" content={SITE.name} />
+<meta property="og:locale" content={ogLocale} />
+
+<link
+  rel="alternate"
+  type="application/rss+xml"
+  title={`${SITE.name} (${locale})`}
+  href={new URL(`/${locale}/rss.xml`, SITE.url).href}
+/>
