@@ -1,0 +1,57 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { locales, type Locale, useTranslations } from '../../i18n/ui';
+import { localizedPath, formatDate } from '../../i18n/utils';
+import { getArticlesByLocale, articlePath } from '../../lib/articles';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export const getStaticPaths = (() => {
+  return locales.map((locale) => ({ params: { locale } }));
+}) satisfies GetStaticPaths;
+
+const locale = Astro.params.locale as Locale;
+const t = useTranslations(locale);
+
+const articles = (await getArticlesByLocale(locale)).slice(0, 5);
+
+const path = localizedPath(locale);
+const alternatePaths = Object.fromEntries(locales.map((l) => [l, localizedPath(l)])) as Record<
+  Locale,
+  string
+>;
+const switcherTargets = alternatePaths;
+---
+
+<BaseLayout
+  locale={locale}
+  title={t('site.title')}
+  description={t('site.description')}
+  path={path}
+  alternatePaths={alternatePaths}
+  switcherTargets={switcherTargets}
+>
+  <h1>{t('home.heading')}</h1>
+  <p>{t('home.intro')}</p>
+
+  <h2>{t('home.recent')}</h2>
+  {
+    articles.length === 0 ? (
+      <p>{t('home.empty')}</p>
+    ) : (
+      <ul class="article-list">
+        {articles.map((a) => (
+          <li class="article-list__item">
+            <h2>
+              <a href={articlePath(a)}>{a.entry.data.title}</a>
+            </h2>
+            <p class="article-meta">
+              {t('article.published')}: {formatDate(a.entry.data.pubDate, locale)}
+            </p>
+            <p>{a.entry.data.description}</p>
+          </li>
+        ))}
+      </ul>
+    )
+  }
+  <p><a href={localizedPath(locale, 'articles')}>{t('home.readMore')}</a></p>
+</BaseLayout>
