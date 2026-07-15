@@ -1,0 +1,31 @@
+---
+title: "Hello, World"
+dek: "A first article that exercises the bilingual template end to end."
+date: 2026-01-15
+layoutVariant: feature
+wide: true
+showToc: false
+---
+
+import Callout from '../../../../components/Callout.astro';
+
+This is the English edition of the sample article. It is written in **MDX**, so
+it can mix long-form prose with imported components. Everything on this page is
+rendered at build time and works with JavaScript disabled.
+
+<Callout title="Why this article exists">
+  It demonstrates the folder-per-article content model, the article reading
+  view (H1 title, H3 dek, meta line, prose body), and a shared component
+  imported directly into MDX.
+</Callout>
+
+## A section heading
+
+Reading pages use a serif type scale and a restrained palette that follows your
+system's light or dark preference. There are no downloaded web fonts.
+
+- Add an article by creating one folder with `en/README.mdx` and `es/README.mdx`.
+- Colocate images and assets next to the content.
+- Frontmatter controls (`wide`, `layoutVariant`) let a piece vary its layout.
+
+That's the whole loop: content-first, bilingual, and static.
