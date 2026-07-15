@@ -1,0 +1,28 @@
+---
+import type { Locale } from '../../config/site';
+import { LOCALES, SITE } from '../../config/site';
+import { useTranslations } from '../../i18n/utils';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export function getStaticPaths() {
+  return LOCALES.map((lang) => ({ params: { lang } }));
+}
+
+const { lang } = Astro.params;
+const locale = lang as Locale;
+const t = useTranslations(locale);
+
+const bio: Record<Locale, string> = {
+  en: `${SITE.author} writes short, content-first pieces about building on the web. This is a minimal placeholder biography for a bilingual personal site.`,
+  es: `${SITE.author} escribe piezas breves y centradas en el contenido sobre construir en la web. Esta es una biografía de ejemplo para un sitio personal bilingüe.`,
+};
+---
+<BaseLayout locale={locale} title={t('about.title')} description={bio[locale]}>
+  <h1>{t('about.title')}</h1>
+  <p>{bio[locale]}</p>
+  <p>
+    <a href="https://profile.personal-site.example" rel="noopener" target="_blank">
+      {t('about.profileLink')}
+    </a>
+  </p>
+</BaseLayout>
