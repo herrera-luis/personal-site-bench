@@ -1,0 +1,26 @@
+---
+import type { Locale } from '../config/site';
+import { LOCALES } from '../config/site';
+import { swapLocaleInPath, useTranslations } from '../i18n/utils';
+
+interface Props {
+  locale: Locale;
+  pathname: string;
+}
+
+const { locale, pathname } = Astro.props;
+const t = useTranslations(locale);
+---
+<nav class="lang-switch" aria-label={t('nav.language')}>
+  {LOCALES.map((loc) => (
+    <a
+      href={swapLocaleInPath(pathname, loc)}
+      hreflang={loc}
+      lang={loc}
+      aria-current={loc === locale ? 'true' : undefined}
+      data-lang-switch={loc}
+    >
+      {t(loc === 'en' ? 'lang.en' : 'lang.es')}
+    </a>
+  ))}
+</nav>
