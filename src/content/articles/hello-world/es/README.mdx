@@ -1,0 +1,32 @@
+---
+title: "Hola, mundo"
+dek: "Un primer artículo que ejercita la plantilla bilingüe de principio a fin."
+date: 2026-01-15
+layoutVariant: feature
+wide: true
+showToc: false
+---
+
+import Callout from '../../../../components/Callout.astro';
+
+Esta es la edición en español del artículo de ejemplo. Está escrito en **MDX**,
+así que puede combinar prosa de formato largo con componentes importados. Todo en
+esta página se genera en tiempo de compilación y funciona con JavaScript
+desactivado.
+
+<Callout title="Por qué existe este artículo">
+  Demuestra el modelo de contenido de una carpeta por artículo, la vista de
+  lectura (título H1, subtítulo H3, línea de metadatos y cuerpo de prosa) y un
+  componente compartido importado directamente en MDX.
+</Callout>
+
+## Un encabezado de sección
+
+Las páginas de lectura usan una escala tipográfica serif y una paleta sobria que
+sigue la preferencia clara u oscura de tu sistema. No se descargan fuentes web.
+
+- Agrega un artículo creando una sola carpeta con `en/README.mdx` y `es/README.mdx`.
+- Coloca las imágenes y los recursos junto al contenido.
+- Los controles del frontmatter (`wide`, `layoutVariant`) permiten variar el diseño.
+
+Ese es todo el ciclo: centrado en el contenido, bilingüe y estático.
