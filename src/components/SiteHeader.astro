@@ -1,0 +1,38 @@
+---
+import type { Locale } from '../config/site';
+import { SITE } from '../config/site';
+import { localizePath, useTranslations } from '../i18n/utils';
+import LanguageSwitcher from './LanguageSwitcher.astro';
+
+interface Props {
+  locale: Locale;
+  pathname: string;
+}
+
+const { locale, pathname } = Astro.props;
+const t = useTranslations(locale);
+const roles = SITE.roles[locale].join(', ');
+
+const homeHref = localizePath('', locale);
+const articlesHref = localizePath('articles', locale);
+const aboutHref = localizePath('about', locale);
+
+function isCurrent(href: string): boolean {
+  const norm = (p: string) => (p.endsWith('/') ? p : p + '/');
+  return norm(pathname) === norm(href);
+}
+---
+<header class="site-header">
+  <div class="container bar">
+    <div class="brand">
+      <a class="name" href={homeHref}>{SITE.name}</a>
+      <span class="roles">[{roles}]</span>
+    </div>
+    <nav class="nav" aria-label="Primary">
+      <a href={homeHref} aria-current={isCurrent(homeHref) ? 'page' : undefined}>{t('nav.home')}</a>
+      <a href={articlesHref} aria-current={isCurrent(articlesHref) ? 'page' : undefined}>{t('nav.articles')}</a>
+      <a href={aboutHref} aria-current={isCurrent(aboutHref) ? 'page' : undefined}>{t('nav.about')}</a>
+      <LanguageSwitcher locale={locale} pathname={pathname} />
+    </nav>
+  </div>
+</header>
