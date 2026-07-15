@@ -1,0 +1,140 @@
+:root {
+  --max-width: 42rem;
+  --fg: #1a1a1a;
+  --muted: #555;
+  --bg: #ffffff;
+  --accent: #2251c5;
+  --border: #e5e5e5;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  color: var(--fg);
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+a {
+  color: var(--accent);
+}
+
+.site-header__inner,
+.site-main,
+.site-footer__inner {
+  width: 100%;
+  max-width: var(--max-width);
+  margin-inline: auto;
+  padding-inline: 1rem;
+}
+
+.site-header {
+  border-bottom: 1px solid var(--border);
+}
+
+.site-header__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+  padding-block: 1rem;
+}
+
+.site-header__brand {
+  font-weight: 700;
+  text-decoration: none;
+  color: var(--fg);
+}
+
+.site-nav ul,
+.lang-switcher ul {
+  list-style: none;
+  display: flex;
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+}
+
+.site-nav a[aria-current='page'] {
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+.lang-switcher {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.lang-switcher__label {
+  color: var(--muted);
+}
+
+.lang-switcher__current {
+  font-weight: 700;
+}
+
+.site-main {
+  flex: 1;
+  padding-block: 2rem;
+}
+
+.site-footer {
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.site-footer__inner {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding-block: 1.5rem;
+}
+
+.article-list {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 1.5rem;
+}
+
+.article-list__item h2 {
+  margin: 0 0 0.25rem;
+}
+
+.article-meta {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.tags {
+  list-style: none;
+  display: flex;
+  gap: 0.5rem;
+  padding: 0;
+  margin: 0.5rem 0 0;
+  flex-wrap: wrap;
+}
+
+.tags li {
+  font-size: 0.8rem;
+  background: #f2f2f2;
+  border-radius: 999px;
+  padding: 0.1rem 0.6rem;
+}
