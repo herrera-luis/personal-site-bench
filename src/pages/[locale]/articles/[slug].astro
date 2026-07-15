@@ -1,0 +1,87 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { render } from 'astro:content';
+import { locales, type Locale, useTranslations } from '../../../i18n/ui';
+import { localizedPath, formatDate } from '../../../i18n/utils';
+import { getAllArticles, articlePath, getTranslation } from '../../../lib/articles';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+
+export const getStaticPaths = (async () => {
+  const all = await getAllArticles();
+  return all.map((article) => ({
+    params: { locale: article.locale, slug: article.slug },
+    props: { article },
+  }));
+}) satisfies GetStaticPaths;
+
+const locale = Astro.params.locale as Locale;
+const { article } = Astro.props;
+const t = useTranslations(locale);
+const { data } = article.entry;
+
+const { Content } = await render(article.entry);
+
+const path = articlePath(article);
+
+// Build hreflang alternates + switcher targets from the shared translationKey.
+// Missing counterparts fall back to that locale's home for the switcher, and
+// are simply omitted from hreflang alternates.
+const alternatePaths: Partial<Record<Locale, string>> = {};
+const switcherTargets = {} as Record<Locale, string>;
+for (const l of locales) {
+  if (l === locale) {
+    alternatePaths[l] = path;
+    switcherTargets[l] = path;
+    continue;
+  }
+  const counterpart = await getTranslation(data.translationKey, l);
+  if (counterpart) {
+    const cp = articlePath(counterpart);
+    alternatePaths[l] = cp;
+    switcherTargets[l] = cp;
+  } else {
+    switcherTargets[l] = localizedPath(l);
+  }
+}
+---
+
+<BaseLayout
+  locale={locale}
+  title={`${data.title} — ${t('site.title')}`}
+  description={data.description}
+  path={path}
+  alternatePaths={alternatePaths}
+  switcherTargets={switcherTargets}
+  ogType="article"
+  publishedTime={data.pubDate}
+  modifiedTime={data.updatedDate}
+>
+  <article>
+    <h1>{data.title}</h1>
+    <p class="article-meta">
+      {t('article.published')}: <time datetime={data.pubDate.toISOString()}>{formatDate(data.pubDate, locale)}</time>
+      {
+        data.updatedDate && (
+          <>
+            {' · '}
+            {t('article.updated')}:{' '}
+            <time datetime={data.updatedDate.toISOString()}>
+              {formatDate(data.updatedDate, locale)}
+            </time>
+          </>
+        )
+      }
+    </p>
+    {
+      data.tags.length > 0 && (
+        <ul class="tags">
+          {data.tags.map((tag) => (
+            <li>{tag}</li>
+          ))}
+        </ul>
+      )
+    }
+    <Content />
+    <p><a href={localizedPath(locale, 'articles')}>{t('article.backToList')}</a></p>
+  </article>
+</BaseLayout>
