@@ -1,0 +1,40 @@
+---
+import type { Locale } from '../config/site';
+import { localizePath, useTranslations } from '../i18n/utils';
+import { articleSlug, type ArticleEntry } from '../i18n/articles';
+
+interface Props {
+  locale: Locale;
+  articles: ArticleEntry[];
+}
+
+const { locale, articles } = Astro.props;
+const t = useTranslations(locale);
+
+const dateFmt = new Intl.DateTimeFormat(locale, {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+---
+{articles.length === 0 ? (
+  <p class="empty-state">{t('home.empty')}</p>
+) : (
+  <ul class="article-list">
+    {articles.map((entry) => {
+      const slug = articleSlug(entry);
+      const href = localizePath(`articles/${slug}`, locale);
+      return (
+        <li>
+          <h3><a href={href}>{entry.data.title}</a></h3>
+          <p class="dek">{entry.data.dek}</p>
+          <p class="meta">
+            <time datetime={entry.data.date.toISOString()}>{dateFmt.format(entry.data.date)}</time>
+            {' · '}
+            <a href={href}>{t('article.fullArticle')}</a>
+          </p>
+        </li>
+      );
+    })}
+  </ul>
+)}
