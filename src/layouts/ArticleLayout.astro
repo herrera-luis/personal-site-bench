@@ -1,0 +1,39 @@
+---
+import type { Locale } from '../config/site';
+import { SITE } from '../config/site';
+import { useTranslations } from '../i18n/utils';
+import BaseLayout from './BaseLayout.astro';
+
+interface Props {
+  locale: Locale;
+  title: string;
+  dek: string;
+  date: Date;
+  wide?: boolean;
+  layoutVariant?: 'default' | 'feature';
+}
+
+const { locale, title, dek, date, wide = false, layoutVariant = 'default' } = Astro.props;
+const t = useTranslations(locale);
+const dateFmt = new Intl.DateTimeFormat(locale, {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+---
+<BaseLayout locale={locale} title={title} description={dek} ogType="article" wide={wide}>
+  <article class:list={['article', layoutVariant]}>
+    <header>
+      <h1>{title}</h1>
+      <h3 class="dek">{dek}</h3>
+      <p class="meta">
+        {t('article.by')} {SITE.author}
+        {' · '}
+        <time datetime={date.toISOString()}>{dateFmt.format(date)}</time>
+      </p>
+    </header>
+    <div class="prose">
+      <slot />
+    </div>
+  </article>
+</BaseLayout>
