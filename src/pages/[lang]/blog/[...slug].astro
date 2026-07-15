@@ -1,0 +1,137 @@
+---
+import { render } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { useTranslations, localizedPath, type Locale } from '../../../i18n/utils';
+import { dateLocale } from '../../../i18n/ui';
+import {
+  getArticlesByLocale,
+  getTranslation,
+  articleSlug,
+  articlePath,
+  type BlogEntry,
+} from '../../../lib/articles';
+import { locales } from '../../../i18n/utils';
+
+export async function getStaticPaths() {
+  const paths = [];
+  for (const lang of locales) {
+    const entries = await getArticlesByLocale(lang);
+    for (const entry of entries) {
+      paths.push({
+        params: { lang, slug: articleSlug(entry) },
+        props: { entry },
+      });
+    }
+  }
+  return paths;
+}
+
+interface Props {
+  entry: BlogEntry;
+}
+
+const lang = Astro.params.lang as Locale;
+const { entry } = Astro.props;
+const t = useTranslations(lang);
+const { Content } = await render(entry);
+
+// Build hreflang alternates: always self, plus the counterpart if it exists.
+const alternates = [{ lang, href: articlePath(entry) }];
+const otherLang = locales.find((l) => l !== lang) as Locale;
+const counterpart = await getTranslation(entry, otherLang);
+let switchPath: string | undefined;
+if (counterpart) {
+  alternates.push({ lang: otherLang, href: articlePath(counterpart) });
+  switchPath = `blog/${articleSlug(counterpart)}`;
+}
+
+const fmt = (d: Date) =>
+  d.toLocaleDateString(dateLocale[lang], {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+---
+
+<BaseLayout
+  title={`${entry.data.title} — ${t('site.title')}`}
+  description={entry.data.description}
+  lang={lang}
+  path={articlePath(entry)}
+  alternates={alternates}
+  switchPath={switchPath}
+  ogType="article"
+  publishedTime={entry.data.pubDate}
+  modifiedTime={entry.data.updatedDate}
+  tags={entry.data.tags}
+>
+  <article>
+    <header class="article-header">
+      <h1>{entry.data.title}</h1>
+      <p class="muted meta">
+        <span>
+          {t('article.published')}:
+          <time datetime={entry.data.pubDate.toISOString()}>
+            {fmt(entry.data.pubDate)}
+          </time>
+        </span>
+        {
+          entry.data.updatedDate && (
+            <span>
+              {' · '}
+              {t('article.updated')}:
+              <time datetime={entry.data.updatedDate.toISOString()}>
+                {fmt(entry.data.updatedDate)}
+              </time>
+            </span>
+          )
+        }
+      </p>
+    </header>
+
+    <div class="prose">
+      <Content />
+    </div>
+
+    {
+      entry.data.tags.length > 0 && (
+        <footer class="article-tags">
+          <h2>{t('article.tags')}</h2>
+          <ul class="tag-list">
+            {entry.data.tags.map((tag) => (
+              <li class="tag">{tag}</li>
+            ))}
+          </ul>
+        </footer>
+      )
+    }
+
+    <p class="back">
+      <a href={localizedPath(lang, 'blog')}>{t('article.backToBlog')}</a>
+    </p>
+  </article>
+</BaseLayout>
+
+<style>
+  .article-header {
+    margin-bottom: var(--space-4);
+    padding-bottom: var(--space-3);
+    border-bottom: 1px solid var(--color-border);
+  }
+  .article-header h1 {
+    margin-bottom: var(--space-2);
+  }
+  .meta {
+    font-size: 0.9rem;
+    margin: 0;
+  }
+  .article-tags {
+    margin-top: var(--space-5);
+  }
+  .article-tags h2 {
+    font-size: 1rem;
+  }
+  .back {
+    margin-top: var(--space-5);
+  }
+</style>

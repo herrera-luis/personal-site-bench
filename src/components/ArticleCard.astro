@@ -1,0 +1,43 @@
+---
+import type { BlogEntry } from '../lib/articles';
+import { articlePath } from '../lib/articles';
+import { dateLocale, type Locale } from '../i18n/ui';
+
+export interface Props {
+  entry: BlogEntry;
+  lang: Locale;
+}
+
+const { entry, lang } = Astro.props;
+const href = articlePath(entry);
+const dateStr = entry.data.pubDate.toLocaleDateString(dateLocale[lang], {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+---
+
+<article class="card">
+  <h3><a href={href}>{entry.data.title}</a></h3>
+  <p class="muted meta">
+    <time datetime={entry.data.pubDate.toISOString()}>{dateStr}</time>
+  </p>
+  <p>{entry.data.description}</p>
+</article>
+
+<style>
+  .card {
+    padding: var(--space-4) 0;
+    border-bottom: 1px solid var(--color-border);
+  }
+  .card h3 {
+    margin: 0 0 var(--space-1);
+  }
+  .meta {
+    margin: 0 0 var(--space-2);
+    font-size: 0.9rem;
+  }
+  .card p:last-child {
+    margin-bottom: 0;
+  }
+</style>

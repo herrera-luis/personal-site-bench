@@ -1,0 +1,56 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ArticleCard from '../../components/ArticleCard.astro';
+import { useTranslations, localizedPath, locales, type Locale } from '../../i18n/utils';
+import { getArticlesByLocale } from '../../lib/articles';
+
+export function getStaticPaths() {
+  return locales.map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as Locale;
+const t = useTranslations(lang);
+const articles = (await getArticlesByLocale(lang)).slice(0, 3);
+
+// The home page exists in both locales, so alternates cover en + es.
+const alternates = locales.map((l) => ({ lang: l, href: localizedPath(l, '') }));
+---
+
+<BaseLayout
+  title={`${t('site.title')} — ${t('site.tagline')}`}
+  description={t('site.tagline')}
+  lang={lang}
+  path={localizedPath(lang, '')}
+  alternates={alternates}
+  switchPath=""
+>
+  <section class="intro">
+    <h1>{t('home.intro.heading')}</h1>
+    <p>{t('home.intro.body')}</p>
+  </section>
+
+  <section>
+    <h2>{t('home.recent')}</h2>
+    {
+      articles.length === 0 ? (
+        <p class="muted">{t('blog.empty')}</p>
+      ) : (
+        articles.map((entry) => <ArticleCard entry={entry} lang={lang} />)
+      )
+    }
+    <p class="view-all">
+      <a href={localizedPath(lang, 'blog')}>{t('home.viewAll')} →</a>
+    </p>
+  </section>
+</BaseLayout>
+
+<style>
+  .intro {
+    padding-bottom: var(--space-4);
+    border-bottom: 1px solid var(--color-border);
+    margin-bottom: var(--space-4);
+  }
+  .view-all {
+    margin-top: var(--space-4);
+  }
+</style>
