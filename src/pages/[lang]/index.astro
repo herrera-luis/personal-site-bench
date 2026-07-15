@@ -1,0 +1,23 @@
+---
+import type { Locale } from '../../config/site';
+import { LOCALES } from '../../config/site';
+import { useTranslations } from '../../i18n/utils';
+import { getArticlesForLocale } from '../../i18n/articles';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import IdentityStrip from '../../components/IdentityStrip.astro';
+import ArticleList from '../../components/ArticleList.astro';
+
+export function getStaticPaths() {
+  return LOCALES.map((lang) => ({ params: { lang } }));
+}
+
+const { lang } = Astro.params;
+const locale = lang as Locale;
+const t = useTranslations(locale);
+const articles = await getArticlesForLocale(locale);
+---
+<BaseLayout locale={locale} title="Personal Site" description={t('site.description')}>
+  <IdentityStrip locale={locale} />
+  <h2>{t('home.latest')}</h2>
+  <ArticleList locale={locale} articles={articles} />
+</BaseLayout>
