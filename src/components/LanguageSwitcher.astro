@@ -1,0 +1,34 @@
+---
+import type { Locale } from '../i18n/ui';
+import { locales, localeNames } from '../i18n/ui';
+
+interface Props {
+  current: Locale;
+  /** Map of locale -> href to switch to for the current page. */
+  targets: Record<Locale, string>;
+  switcherLabel: string;
+}
+
+const { current, targets, switcherLabel } = Astro.props;
+---
+
+<nav class="lang-switcher" aria-label={switcherLabel}>
+  <span class="lang-switcher__label">{switcherLabel}:</span>
+  <ul>
+    {
+      locales.map((locale) => (
+        <li>
+          {locale === current ? (
+            <span aria-current="true" class="lang-switcher__current">
+              {localeNames[locale]}
+            </span>
+          ) : (
+            <a href={targets[locale]} hreflang={locale}>
+              {localeNames[locale]}
+            </a>
+          )}
+        </li>
+      ))
+    }
+  </ul>
+</nav>
