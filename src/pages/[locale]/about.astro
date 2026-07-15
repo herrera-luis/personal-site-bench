@@ -1,0 +1,36 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { locales, type Locale, useTranslations } from '../../i18n/ui';
+import { localizedPath } from '../../i18n/utils';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export const getStaticPaths = (() => {
+  return locales.map((locale) => ({ params: { locale } }));
+}) satisfies GetStaticPaths;
+
+const locale = Astro.params.locale as Locale;
+const t = useTranslations(locale);
+
+const path = localizedPath(locale, 'about');
+const alternatePaths = Object.fromEntries(
+  locales.map((l) => [l, localizedPath(l, 'about')]),
+) as Record<Locale, string>;
+const switcherTargets = alternatePaths;
+
+const body: Record<Locale, string> = {
+  en: 'I am a software engineer who enjoys building for the web. This site is where I share what I learn.',
+  es: 'Soy ingeniero de software y disfruto construir para la web. En este sitio comparto lo que aprendo.',
+};
+---
+
+<BaseLayout
+  locale={locale}
+  title={`${t('about.heading')} — ${t('site.title')}`}
+  description={t('site.description')}
+  path={path}
+  alternatePaths={alternatePaths}
+  switcherTargets={switcherTargets}
+>
+  <h1>{t('about.heading')}</h1>
+  <p>{body[locale]}</p>
+</BaseLayout>
