@@ -1,0 +1,27 @@
+---
+import type { Locale } from '../config/site';
+import { SITE } from '../config/site';
+import { localizePath, useTranslations } from '../i18n/utils';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+const year = new Date().getFullYear();
+const rssHref = localizePath('rss.xml', locale);
+---
+<footer class="site-footer">
+  <div class="container bar">
+    <div class="links">
+      {SITE.social.map((s) => (
+        <a href={s.href} rel="me noopener" target="_blank">{s.label}</a>
+      ))}
+      <a href={rssHref}>{t('footer.rss')}</a>
+    </div>
+    <div class="copyright">
+      © {year} {SITE.author}. {t('footer.copyright')}
+    </div>
+  </div>
+</footer>
