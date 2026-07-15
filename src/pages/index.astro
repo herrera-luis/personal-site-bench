@@ -1,0 +1,19 @@
+---
+// Root path: redirect to the default locale. Astro's i18n
+// `redirectToDefaultLocale` also handles `/`, and this page guarantees a
+// static `/index.html` redirect for the static/Vercel output.
+import { DEFAULT_LOCALE } from '../config/site';
+---
+<!doctype html>
+<html lang={DEFAULT_LOCALE}>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="refresh" content={`0;url=/${DEFAULT_LOCALE}/`} />
+    <link rel="canonical" href={`/${DEFAULT_LOCALE}/`} />
+    <meta name="robots" content="noindex" />
+    <title>Redirecting…</title>
+  </head>
+  <body>
+    <a href={`/${DEFAULT_LOCALE}/`}>Continue to /{DEFAULT_LOCALE}/</a>
+  </body>
+</html>
