@@ -1,0 +1,49 @@
+---
+import type { Locale } from '../i18n/ui';
+import { useTranslations } from '../i18n/ui';
+import { localizedPath } from '../i18n/utils';
+import LanguageSwitcher from './LanguageSwitcher.astro';
+
+interface Props {
+  locale: Locale;
+  /** Current page site-root-relative path, for active-link detection. */
+  currentPath: string;
+  /** Map of locale -> href for the language switcher. */
+  switcherTargets: Record<Locale, string>;
+}
+
+const { locale, currentPath, switcherTargets } = Astro.props;
+const t = useTranslations(locale);
+
+const normalize = (p: string) => (p.endsWith('/') ? p : `${p}/`);
+const here = normalize(currentPath);
+
+const navItems = [
+  { href: localizedPath(locale), label: t('nav.home') },
+  { href: localizedPath(locale, 'about'), label: t('nav.about') },
+  { href: localizedPath(locale, 'articles'), label: t('nav.articles') },
+];
+---
+
+<header class="site-header">
+  <div class="site-header__inner">
+    <a class="site-header__brand" href={localizedPath(locale)}>{t('site.title')}</a>
+    <nav class="site-nav" aria-label={t('nav.primaryLabel')}>
+      <ul>
+        {
+          navItems.map((item) => {
+            const isActive = here === normalize(item.href);
+            return (
+              <li>
+                <a href={item.href} aria-current={isActive ? 'page' : undefined}>
+                  {item.label}
+                </a>
+              </li>
+            );
+          })
+        }
+      </ul>
+    </nav>
+    <LanguageSwitcher current={locale} targets={switcherTargets} switcherLabel={t('switcher.label')} />
+  </div>
+</header>
