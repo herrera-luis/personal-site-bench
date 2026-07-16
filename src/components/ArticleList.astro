@@ -1,0 +1,41 @@
+---
+import { useTranslations, type Locale } from '../i18n/ui';
+import type { ArticleEntry } from '../i18n/articles';
+
+interface Props {
+  lang: Locale;
+  items: Array<{ slug: string; entry: ArticleEntry }>;
+}
+
+const { lang, items } = Astro.props;
+const t = useTranslations(lang);
+
+const dateFmt = new Intl.DateTimeFormat(lang === 'es' ? 'es-ES' : 'en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+---
+{
+  items.length === 0 ? (
+    <p class="empty">{t('home.empty')}</p>
+  ) : (
+    <ul class="article-list">
+      {items.map(({ slug, entry }) => (
+        <li class="article-list-item">
+          <h3 class="article-list-title">
+            <a href={`/${lang}/articles/${slug}/`}>{entry.data.title}</a>
+          </h3>
+          <p class="article-list-dek">{entry.data.dek}</p>
+          <p class="article-list-meta">
+            <time datetime={entry.data.date.toISOString()}>
+              {dateFmt.format(entry.data.date)}
+            </time>
+            {' · '}
+            <a href={`/${lang}/articles/${slug}/`}>{t('articles.readFull')}</a>
+          </p>
+        </li>
+      ))}
+    </ul>
+  )
+}

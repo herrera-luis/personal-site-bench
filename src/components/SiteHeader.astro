@@ -1,0 +1,36 @@
+---
+import { useTranslations, type Locale } from '../i18n/ui';
+import LanguageSwitcher from './LanguageSwitcher.astro';
+
+interface Props {
+  lang: Locale;
+  pathname: string;
+}
+
+const { lang, pathname } = Astro.props;
+const t = useTranslations(lang);
+
+const nav = [
+  { href: `/${lang}/`, label: t('nav.home') },
+  { href: `/${lang}/articles/`, label: t('nav.articles') },
+  { href: `/${lang}/about/`, label: t('nav.about') },
+];
+---
+<header class="site-header">
+  <a class="brand" href={`/${lang}/`}>
+    <span class="brand-name">{t('site.name')}</span>
+    <span class="brand-roles">{t('roles.tagline')}</span>
+  </a>
+  <nav class="site-nav" aria-label="Primary">
+    <ul>
+      {nav.map((item) => (
+        <li>
+          <a href={item.href}>{item.label}</a>
+        </li>
+      ))}
+      <li class="nav-lang">
+        <LanguageSwitcher lang={lang} pathname={pathname} />
+      </li>
+    </ul>
+  </nav>
+</header>

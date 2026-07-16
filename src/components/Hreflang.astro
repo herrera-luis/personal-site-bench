@@ -1,0 +1,25 @@
+---
+import { locales, defaultLocale, switchLocalePath } from '../i18n/ui';
+
+interface Props {
+  /** The current page pathname, e.g. `/en/about`. */
+  pathname: string;
+}
+
+const { pathname } = Astro.props;
+const site = Astro.site ?? new URL('https://personal-site.example');
+
+function absolute(path: string): string {
+  return new URL(path, site).href;
+}
+---
+{
+  locales.map((loc) => (
+    <link rel="alternate" hreflang={loc} href={absolute(switchLocalePath(pathname, loc))} />
+  ))
+}
+<link
+  rel="alternate"
+  hreflang="x-default"
+  href={absolute(switchLocalePath(pathname, defaultLocale))}
+/>

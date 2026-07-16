@@ -1,0 +1,26 @@
+---
+import { useTranslations, type Locale } from '../i18n/ui';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const year = new Date().getFullYear();
+
+const social = [
+  { href: 'https://example.com/a-writer', label: 'Profile' },
+  { href: `/${lang}/rss.xml`, label: t('footer.rss') },
+];
+---
+<footer class="site-footer">
+  <ul class="footer-links">
+    {social.map((item) => (
+      <li>
+        <a href={item.href}>{item.label}</a>
+      </li>
+    ))}
+  </ul>
+  <p class="copyright">© {year} {t('site.name')}. {t('footer.rights')}</p>
+</footer>

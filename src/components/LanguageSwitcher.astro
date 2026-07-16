@@ -1,0 +1,16 @@
+---
+import { otherLocale, switchLocalePath, useTranslations, type Locale } from '../i18n/ui';
+
+interface Props {
+  lang: Locale;
+  pathname: string;
+}
+
+const { lang, pathname } = Astro.props;
+const target = otherLocale(lang);
+const href = switchLocalePath(pathname, target);
+const t = useTranslations(lang);
+---
+<a class="lang-switch" href={href} hreflang={target} rel="alternate" data-lang-switch aria-label={t('lang.label')}>
+  {t('lang.switch')}
+</a>
