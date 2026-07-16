@@ -1,0 +1,28 @@
+---
+title: 'Hola, mundo'
+dek: 'Un primer artículo que ejercita la plantilla bilingüe de artículos de principio a fin.'
+date: 2026-01-15
+variant: default
+showToc: false
+---
+
+import Callout from '../../../../components/Callout.astro';
+
+Bienvenido a **Personal Site**. Este artículo de muestra demuestra el modelo de
+contenido de una carpeta por artículo: vive en
+`src/content/articles/hello-world/es/README.mdx` con su equivalente en inglés al lado.
+
+## Estructura personalizada
+
+Los artículos pueden importar componentes compartidos y variar su diseño mediante
+controles opcionales del frontmatter como `variant` y `showToc`.
+
+<Callout type="note">
+  Este recuadro es un componente compartido `Callout.astro` importado directamente
+  en MDX — prueba de que un artículo puede presentar una estructura personalizada.
+</Callout>
+
+## Lectura sin JavaScript
+
+Toda esta página se renderiza como HTML estático. La lectura funciona con JavaScript
+deshabilitado; la navegación y el selector de idioma son enlaces simples.

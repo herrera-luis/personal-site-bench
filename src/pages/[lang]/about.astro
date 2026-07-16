@@ -1,0 +1,26 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { locales, useTranslations, type Locale } from '../../i18n/ui';
+
+export function getStaticPaths() {
+  return locales.map((lang) => ({ params: { lang } }));
+}
+
+const { lang } = Astro.params as { lang: Locale };
+const t = useTranslations(lang);
+---
+<BaseLayout lang={lang} title={`${t('about.title')} — ${t('site.name')}`} description={t('about.description')}>
+  <article class="article">
+    <header class="article-header">
+      <h1>{t('about.heading')}</h1>
+    </header>
+    <div class="article-body">
+      <p>{t('about.bio')}</p>
+      <p>
+        <a href="https://example.com/a-writer" rel="me noopener" target="_blank">
+          {t('about.profileLabel')}
+        </a>
+      </p>
+    </div>
+  </article>
+</BaseLayout>

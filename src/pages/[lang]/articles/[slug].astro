@@ -1,0 +1,29 @@
+---
+import ArticleLayout from '../../../layouts/ArticleLayout.astro';
+import { locales, type Locale } from '../../../i18n/ui';
+import { getArticlesForLocale } from '../../../i18n/articles';
+
+export async function getStaticPaths() {
+  const paths = [];
+  for (const lang of locales) {
+    const articles = await getArticlesForLocale(lang);
+    for (const { slug, entry } of articles) {
+      paths.push({ params: { lang, slug }, props: { entry } });
+    }
+  }
+  return paths;
+}
+
+const { lang } = Astro.params as { lang: Locale; slug: string };
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+---
+<ArticleLayout
+  lang={lang}
+  title={entry.data.title}
+  dek={entry.data.dek}
+  date={entry.data.date}
+  variant={entry.data.variant}
+>
+  <Content />
+</ArticleLayout>

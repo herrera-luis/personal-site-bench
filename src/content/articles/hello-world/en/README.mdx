@@ -1,0 +1,28 @@
+---
+title: 'Hello, World'
+dek: 'A first article that exercises the bilingual article template end to end.'
+date: 2026-01-15
+variant: default
+showToc: false
+---
+
+import Callout from '../../../../components/Callout.astro';
+
+Welcome to **Personal Site**. This sample article demonstrates the folder-per-article
+content model: it lives at `src/content/articles/hello-world/en/README.mdx` with a
+Spanish counterpart alongside it.
+
+## Custom structure
+
+Articles can import shared components and vary their layout through optional
+frontmatter controls such as `variant` and `showToc`.
+
+<Callout type="note">
+  This box is a shared `Callout.astro` component imported directly into MDX —
+  proof that an article can present a custom structure.
+</Callout>
+
+## Reading without JavaScript
+
+This entire page renders as static HTML. Reading works with JavaScript disabled;
+navigation and the language switcher are plain links.
